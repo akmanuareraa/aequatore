@@ -1,0 +1,9 @@
+.custom-drop-shadow:hover {
+  position: relative;
+  filter: drop-shadow(
+    0px /* offset-x */ 10px /* offset-y */ 20px /* blur-radius */
+      rgba(50, 48, 51, 0.8) /* color */
+  );
+  transition: filter 0.3s ease-in-out;
+}
+

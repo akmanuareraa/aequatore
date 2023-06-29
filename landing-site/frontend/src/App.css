@@ -1,0 +1,16 @@
+.tracking-custom-wide {
+  letter-spacing: 0.1em;
+}
+
+.custom-margin-1 {
+  margin-top: -65px;
+  margin-bottom: -65px;
+}
+
+.custom-card-bg {
+  background: linear-gradient(
+    139.05deg,
+    #1b1d1f 1.38%,
+    rgba(75, 75, 75, 0) 122.96%
+  );
+}
