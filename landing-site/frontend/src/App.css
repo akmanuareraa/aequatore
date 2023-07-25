@@ -8,9 +8,5 @@
 }
 
 .custom-card-bg {
-  background: linear-gradient(
-    139.05deg,
-    #1b1d1f 1.38%,
-    rgba(75, 75, 75, 0) 122.96%
-  );
+  background: linear-gradient(134deg, #1b1d1f 0%, rgba(114, 115, 116, 0) 100%);
 }

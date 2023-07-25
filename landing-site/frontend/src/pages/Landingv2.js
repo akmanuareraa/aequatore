@@ -123,24 +123,16 @@ function Landing(props) {
           </div>
 
           {/* who we are */}
-          <div className="z-10 flex flex-col self-center justify-center p-8 mt-24 lg:mt-36 mb-8 lg:w-[1200px] w-[300px] lg:items-center">
+          <div className="z-10 flex flex-col self-center justify-center p-8 mt-24 lg:mt-36 mb-20 lg:w-[600px] w-[300px]">
             {/* heading */}
-            <div className="flex flex-col items-center justify-center space-y-4 lg:flex-row lg:space-x-12 lg:space-y-0">
-              <p className="text-4xl font-extrabold text-center text-white lg:text-6xl lg:hidden">
+            <div className="flex flex-col items-center justify-center space-y-4">
+              <p className="text-4xl font-extrabold text-center text-white lg:text-6xl">
                 Who We Are
               </p>
-              <p className="text-sm text-center lg:hidden text-white/50 lg:text-lg">
+              <p className="text-sm text-center text-white/50 lg:text-lg">
                 Inspiring Positive Change
               </p>
-              <div className="flex-col justify-center hidden space-y-2 lg:flex">
-                <p className="text-4xl font-extrabold text-center text-white lg:text-6xl">
-                  Who We Are
-                </p>
-                <p className="text-sm text-center text-white/50 lg:text-lg">
-                  Inspiring Positive Change
-                </p>
-              </div>
-              <p className="pt-3 lg:pt-0 text-center text-white w-[300px] lg:w-[600px] lg:text-lg text-sm">
+              <p className="pt-3 lg:pt-6 text-center text-white w-[300px] lg:w-[600px] lg:text-lg text-sm">
                 We are a team of experts in finance and economics, driven by one
                 mission: to reduce gender inequalities and foster sustainable
                 and inclusive development.
@@ -149,7 +141,7 @@ function Landing(props) {
           </div>
 
           {/* Our focus */}
-          <div className="z-10 flex flex-col self-center justify-center p-8 mt-24 mb-8 lg:w-[600px] w-[300px]">
+          <div className="z-10 flex flex-col self-center justify-center p-8 lg:mt-20 mb-20 lg:w-[600px] w-[300px]">
             {/* heading */}
             <div className="flex flex-col items-center justify-center space-y-4">
               <p className="text-4xl font-extrabold text-center text-white lg:text-6xl">
@@ -158,63 +150,45 @@ function Landing(props) {
               <p className="text-sm text-center text-white/50 lg:text-lg">
                 Financial Inclusion, Empowering Women
               </p>
-              <div className="flex flex-col p-6 pt-3 rounded-2xl lg:pt-6 bg-white/10">
-                <p className="text-center text-white w-[300px] lg:w-[600px] lg:text-lg text-sm">
-                  We provide women in rural areas of developing countries with
-                  new tools and opportunities. By combining our expertise in
-                  blockchain technology and social development, we empower women
-                  to achieve economic and financial independence.
-                </p>
-              </div>
+              <p className="pt-3 lg:pt-6 text-center text-white w-[300px] lg:w-[600px] lg:text-lg text-sm">
+                We provide women in rural areas of developing countries with new
+                tools and opportunities. By combining our expertise in
+                blockchain technology and social development, we empower women
+                to achieve economic and financial independence.
+              </p>
             </div>
           </div>
 
           {/* our mission */}
-          <div className="z-10 flex flex-col self-center justify-center p-8 mt-24 lg:mt-36 mb-8 lg:w-[1200px] w-[300px] lg:items-center">
+          <div className="z-10 flex flex-col self-center justify-center p-8 lg:mt-20 mb-20 lg:w-[600px] w-[300px]">
             {/* heading */}
-            <div className="flex flex-col items-center justify-center space-y-4 lg:flex-row lg:space-x-12 lg:space-y-0">
-              <p className="text-4xl font-extrabold text-center text-white lg:text-6xl lg:hidden">
+            <div className="flex flex-col justify-center space-y-4">
+              <p className="text-4xl font-extrabold text-center text-white lg:text-6xl">
                 Our Mission
               </p>
-              <p className="text-sm text-center lg:hidden text-white/50 lg:text-lg">
+              <p className="text-sm text-center text-white/50 lg:text-lg">
                 Empowering Dreams, Rural Women United
               </p>
-              <p className="pt-3 lg:pt-0 text-center text-white w-[300px] lg:w-[600px] lg:text-lg text-sm">
+              <p className="pt-3 lg:pt-6 text-center text-white w-[300px] lg:w-[600px] lg:text-lg text-sm self-center">
                 We are dedicated to unlocking the potential of every woman,
                 regardless of her location. Through the transformative power of
                 blockchain, we strive for gender equality and sustainable
                 development.
               </p>
-              <div className="flex-col justify-center hidden space-y-2 lg:flex">
-                <p className="text-4xl font-extrabold text-center text-white lg:text-6xl">
-                  Our Mission
-                </p>
-                <p className="text-sm text-center text-white/50 lg:text-lg">
-                  Empowering Dreams, Rural Women United
-                </p>
-              </div>
             </div>
           </div>
 
           {/* what we do */}
-          <div className="z-10 flex flex-col self-center justify-center p-8 mt-24 lg:mt-36 mb-8 lg:w-[1200px] w-[300px] lg:items-center">
+          <div className="z-10 flex flex-col self-center justify-center p-8 lg:mt-20 mb-20 lg:w-[600px] w-[300px]">
             {/* heading */}
-            <div className="flex flex-col items-center justify-center space-y-4 lg:flex-row lg:space-x-12 lg:space-y-0">
-              <p className="text-4xl font-extrabold text-center text-white lg:text-6xl lg:hidden">
+            <div className="flex flex-col items-center justify-center space-y-4">
+              <p className="text-4xl font-extrabold text-center text-white lg:text-6xl">
                 What We Do
               </p>
-              <p className="text-sm text-center lg:hidden text-white/50 lg:text-lg">
+              <p className="text-sm text-center text-white/50 lg:text-lg">
                 Microfinance Reinvented for Rural Women
               </p>
-              <div className="flex-col justify-center hidden space-y-2 lg:flex">
-                <p className="text-4xl font-extrabold text-center text-white lg:text-6xl">
-                  What We Do
-                </p>
-                <p className="text-sm text-center text-white/50 lg:text-lg">
-                  Microfinance Reinvented for Rural Women
-                </p>
-              </div>
-              <p className="pt-3 lg:pt-0 text-center text-white w-[300px] lg:w-[600px] lg:text-lg text-sm">
+              <p className="pt-3 lg:pt-6 text-center text-white w-[300px] lg:w-[600px] lg:text-lg text-sm">
                 We establish a decentralized platform where women can use their
                 assets as collateral, opening doors to financial services and
                 enabling them to pursue entrepreneurial opportunities. With
@@ -227,16 +201,16 @@ function Landing(props) {
           </div>
 
           {/* why it matters */}
-          <div className="z-10 flex flex-col self-center justify-center p-8 mt-24 lg:mt-36 mb-8 lg:w-[1200px] w-[300px] lg:items-center">
+          <div className="z-10 flex flex-col self-center justify-center p-8 lg:mt-20 mb-20 lg:w-[600px] w-[300px]">
             {/* heading */}
-            <div className="flex flex-col items-center justify-center space-y-4 lg:flex-row lg:space-x-12 lg:space-y-0">
-              <p className="text-4xl font-extrabold text-center text-white lg:text-6xl lg:hidden">
+            <div className="flex flex-col items-center justify-center space-y-4">
+              <p className="text-4xl font-extrabold text-center text-white lg:text-6xl">
                 Why it Matters
               </p>
-              <p className="text-sm text-center lg:hidden text-white/50 lg:text-lg">
+              <p className="text-sm text-center text-white/50 lg:text-lg">
                 Empowerment for Her, Progress for All
               </p>
-              <p className="pt-3 lg:pt-0 text-center text-white w-[300px] lg:w-[600px] lg:text-lg text-sm">
+              <p className="pt-3 lg:pt-6 text-center text-white w-[300px] lg:w-[600px] lg:text-lg text-sm">
                 Women in developing countries often face discrimination and
                 stereotypes based on their gender. They have limited access to
                 food, education, and employment. In sectors such as agri-food,
@@ -245,19 +219,11 @@ function Landing(props) {
                 their ability to access financial services and maximize their
                 productivity.
               </p>
-              <div className="flex-col justify-center hidden space-y-2 lg:flex">
-                <p className="text-4xl font-extrabold text-center text-white lg:text-6xl">
-                  Why it Matters
-                </p>
-                <p className="text-sm text-center text-white/50 lg:text-lg">
-                  Empowerment for Her, Progress for All
-                </p>
-              </div>
             </div>
           </div>
 
           {/* how we do it */}
-          <div className="z-10 flex flex-col self-center justify-center p-8 mt-24 mb-8 lg:w-[600px] w-[300px]">
+          <div className="z-10 flex flex-col self-center justify-center p-8 lg:mt-20 mb-20 lg:w-[600px] w-[300px]">
             {/* heading */}
             <div className="flex flex-col items-center justify-center space-y-4">
               <p className="text-4xl font-extrabold text-center text-white lg:text-6xl">
@@ -266,33 +232,31 @@ function Landing(props) {
               <p className="text-sm text-center text-white/50 lg:text-lg">
                 Building Futures, Blockchain-Driven Empowerment
               </p>
-              <div className="flex flex-col p-6 pt-3 rounded-2xl lg:pt-6 bg-white/10">
-                <p className="text-center text-white w-[300px] lg:w-[600px] lg:text-lg text-sm">
-                  We offer women new tools and opportunities in rural areas of
-                  developing countries such as an user-friendly decentralized
-                  platform where women can use their assets as collateral. This
-                  opens up access to essential financial services and enables
-                  them to pursue entrepreneurial endeavours.
-                  <br />
-                  <br /> With the power of blockchain technology, every
-                  transaction is secure, traceable, and cannot be altered.
-                  Through our expertise in the blockchain industry and
-                  commitment to social and sustainable development, we help
-                  women achieve economic and financial independence. <br />
-                  <br />
-                  We believe that by empowering women, we can create a positive
-                  impact on their lives and their Thanks to our experience in
-                  the blockchain industry and social and sustainable
-                  development, we allow women to achieve economic and financial
-                  independence. Our innovative solutions leverage blockchain
-                  technology to empower women.
-                </p>
-              </div>
+              <p className="pt-3 lg:pt-6 text-center text-white w-[300px] lg:w-[600px] lg:text-lg text-sm">
+                We offer women new tools and opportunities in rural areas of
+                developing countries such as an user-friendly decentralized
+                platform where women can use their assets as collateral. This
+                opens up access to essential financial services and enables them
+                to pursue entrepreneurial endeavours.
+                <br />
+                <br /> With the power of blockchain technology, every
+                transaction is secure, traceable, and cannot be altered. Through
+                our expertise in the blockchain industry and commitment to
+                social and sustainable development, we help women achieve
+                economic and financial independence. <br />
+                <br />
+                We believe that by empowering women, we can create a positive
+                impact on their lives and their Thanks to our experience in the
+                blockchain industry and social and sustainable development, we
+                allow women to achieve economic and financial independence. Our
+                innovative solutions leverage blockchain technology to empower
+                women.
+              </p>
             </div>
           </div>
 
           {/* use cases */}
-          <div className="z-10 flex flex-col self-center justify-center p-8 mt-6 lg:mt-28 mb-36">
+          <div className="z-10 flex flex-col self-center justify-center p-8 mt-28 mb-36">
             {/* heading */}
             <div className="flex flex-col items-center justify-center space-y-4">
               <p className="text-4xl font-extrabold text-center text-white lg:text-6xl">
