@@ -296,7 +296,8 @@ function Landing(props) {
             {/* heading */}
             <div className="flex flex-col items-center justify-center space-y-4">
               <p className="text-4xl font-extrabold text-center text-white lg:text-6xl">
-                Blockchain in Æquatore
+                {/* Blockchain in Æquatore */}
+                Blockchain in Agriculture
               </p>
               <p className="pb-4 text-center text-white text-md lg:text-lg">
                 Use Cases
@@ -363,7 +364,7 @@ function Landing(props) {
           </div>
         </div>
         {/* join us */}
-        <div className="z-10 flex flex-col items-center justify-center w-full px-16 py-12 mt-16 space-y-16 bg-white/90">
+        <div className="z-10 flex flex-col items-center justify-center w-full px-16 py-12 pb-32 mt-16 space-y-16 bg-white/90">
           <div className="flex flex-col items-center space-y-8 lg:space-y-0 lg:flex-row lg:space-x-28">
             <p className="font-extrabold text-black lg:text-[100px] text-[50px] text-center">
               Join Us.
@@ -379,6 +380,30 @@ function Landing(props) {
           <button className="px-16 py-4 text-white capitalize bg-black border-0 rounded-full btn w-fit hover:bg-black ">
             Join Us
           </button>
+        </div>
+        {/* bottom bar */}
+        <div className="fixed bottom-0 left-0 z-10 w-full py-3 lg:px-10 custom-bottom-bar">
+          <div className="flex flex-row items-center justify-between w-full px-3 lg:px-0">
+            <div className="flex flex-col space-y-0">
+              <p className="hidden font-bold text-white lg:flex text-md lg:text-lg">
+                Empowering Dreams, Transforming Lives
+              </p>
+              <p className="font-bold text-white lg:hidden text-md lg:text-lg">
+                Empowering Dreams<br></br> Transforming Lives
+              </p>
+              <p className="hidden text-xs text-white lg:flex lg:text-md">
+                Join our blockchain-powered initiative to empower women and
+                foster sustainable development in developing countries.
+              </p>
+              <p className="w-[250px] text-xs text-white lg:hidden lg:text-md">
+                Join our blockchain-powered initiative to empower women and
+                foster sustainable development in developing countries.
+              </p>
+            </div>
+            <button className="px-6 py-2 text-sm font-bold text-black bg-white rounded-full lg:px-12 lg:text-lg">
+              Join Us
+            </button>
+          </div>
         </div>
       </div>
     </>

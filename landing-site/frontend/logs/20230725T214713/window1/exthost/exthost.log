@@ -1,0 +1,13 @@
+2023-07-25 21:47:15.001 [info] Extension host with pid 34868 started
+2023-07-25 21:47:15.001 [info] Skipping acquiring lock for /home/manuareraa/manu/github/projects/equatore/landing-site/frontend/User/workspaceStorage/2494cb617e59be803afc505d65bdadc9.
+2023-07-25 21:47:15.085 [info] ExtensionService#_doActivateExtension vscode.git-base, startup: true, activationEvent: '*'
+2023-07-25 21:47:15.090 [info] ExtensionService#_doActivateExtension vscode.npm, startup: true, activationEvent: 'workspaceContains:package.json'
+2023-07-25 21:47:15.120 [info] ExtensionService#_doActivateExtension vscode.github, startup: true, activationEvent: '*'
+2023-07-25 21:47:15.173 [info] Eager extensions activated
+2023-07-25 21:47:15.179 [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch, startup: false, activationEvent: 'onStartupFinished'
+2023-07-25 21:47:15.182 [info] ExtensionService#_doActivateExtension vscode.merge-conflict, startup: false, activationEvent: 'onStartupFinished'
+2023-07-25 21:47:15.301 [info] ExtensionService#_doActivateExtension vscode.github-authentication, startup: false, activationEvent: 'onAuthenticationRequest:github'
+2023-07-25 21:47:15.365 [info] ExtensionService#_doActivateExtension vscode.microsoft-authentication, startup: false, activationEvent: 'onAuthenticationRequest:microsoft'
+2023-07-25 21:47:17.162 [info] ExtensionService#_doActivateExtension vscode.git, startup: false, activationEvent: 'api', root cause: vscode.github
+2023-07-25 21:48:53.459 [info] Extension host terminating: renderer closed the MessagePort
+2023-07-25 21:48:53.468 [info] Extension host with pid 34868 exiting with code 0

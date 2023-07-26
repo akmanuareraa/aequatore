@@ -10,3 +10,7 @@
 .custom-card-bg {
   background: linear-gradient(134deg, #1b1d1f 0%, rgba(114, 115, 116, 0) 100%);
 }
+
+.custom-bottom-bar {
+  background-image: linear-gradient(90deg,#af2896,#509bf5)
+}

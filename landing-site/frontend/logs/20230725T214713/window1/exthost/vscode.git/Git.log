@@ -1,0 +1,23 @@
+2023-07-25 21:47:17.275 [info] Log level: Info
+2023-07-25 21:47:17.275 [info] Validating found git in: "git"
+2023-07-25 21:47:17.275 [info] Using git "2.34.1" from "git"
+2023-07-25 21:47:17.275 [info] > git rev-parse --show-toplevel [3ms]
+2023-07-25 21:47:17.275 [info] > git rev-parse --show-toplevel [1ms]
+2023-07-25 21:47:17.275 [info] > git rev-parse --show-toplevel [1ms]
+2023-07-25 21:47:17.275 [info] > git rev-parse --show-toplevel [1ms]
+2023-07-25 21:47:17.280 [info] > git rev-parse --show-toplevel [0ms]
+2023-07-25 21:47:17.284 [info] > git rev-parse --show-toplevel [1ms]
+2023-07-25 21:47:17.289 [info] > git rev-parse --show-toplevel [1ms]
+2023-07-25 21:47:17.293 [info] > git rev-parse --show-toplevel [1ms]
+2023-07-25 21:47:17.299 [info] > git rev-parse --show-toplevel [0ms]
+2023-07-25 21:47:17.303 [info] > git rev-parse --show-toplevel [0ms]
+2023-07-25 21:47:17.309 [info] > git rev-parse --show-toplevel [0ms]
+2023-07-25 21:47:17.313 [info] > git rev-parse --show-toplevel [1ms]
+2023-07-25 21:47:17.318 [info] > git rev-parse --show-toplevel [1ms]
+2023-07-25 21:47:17.322 [info] > git rev-parse --show-toplevel [0ms]
+2023-07-25 21:47:17.327 [info] > git rev-parse --show-toplevel [1ms]
+2023-07-25 21:47:17.332 [info] > git rev-parse --show-toplevel [1ms]
+2023-07-25 21:47:17.335 [info] > git rev-parse --show-toplevel [1ms]
+2023-07-25 21:47:17.339 [info] > git rev-parse --show-toplevel [1ms]
+2023-07-25 21:47:17.343 [info] > git rev-parse --show-toplevel [1ms]
+2023-07-25 21:47:17.347 [info] > git rev-parse --show-toplevel [0ms]
