@@ -1,4 +1,5 @@
 import React from "react";
+import { toast } from "react-hot-toast";
 
 import logoW from "../assets/svg/logo-white.svg";
 import rightArrow from "../assets/svg/right-arrow.svg";
@@ -29,7 +30,7 @@ function Landing(props) {
         </div>
         <div className="flex flex-col">
           {/* navbar */}
-          <div className="fixed top-0 left-0 w-full lg:px-10 py-7">
+          <div className="relative lg:fixed top-0 left-0 w-full lg:px-10 py-7 mt-[-100px] lg:mt-0">
             {/* navbar content */}
             <div className="flex flex-row items-center justify-center w-screen lg:justify-between lg:w-full">
               {/* name and symbol */}
@@ -56,7 +57,13 @@ function Landing(props) {
 
               {/* to platform button */}
               <div className="flex-row items-center hidden mt-2 lg:flex">
-                <button className="px-12 py-2 font-bold text-black bg-white rounded-full">
+                <button
+                  className="px-12 py-2 font-bold text-black bg-white rounded-full"
+                  onClick={() => {
+                    console.log("Coming soon!");
+                    toast.success("Coming soon!");
+                  }}
+                >
                   <div className="flex flex-row items-center space-x-4">
                     <p>To Platform</p>
                     <img
@@ -73,37 +80,48 @@ function Landing(props) {
           {/* hero */}
           <div className="z-10 flex flex-col items-center justify-center mt-4">
             {/* hero text */}
-            <p className="mt-8 text-xs text-white lg:text-lg lg:mt-0">
-              A Research Initiative
+            <p className="mt-8 text-xs font-bold text-white lg:text-lg lg:mt-0">
+              Driving Gender Equality Through Blockchain
             </p>
 
             {/* hero title */}
-            <p className="lg:text-[100px] text-[45px]  font-extrabold text-center text-white leading-tight">
-              <span>Technology</span>
+            <p className="lg:text-[100px] text-[45px]  font-extrabold text-center text-white leading-tight mont-font">
+              <span>ÆQUATORE</span>
               <br />
-              <span>Empowerment</span>
+              <span>FINANCE</span>
               <br />
-              <span>Equality</span>
             </p>
 
             {/* hero subtitle */}
-            <p className="text-center text-white lg:w-[700px] w-[300px]  mt-6 lg:text-lg text-xs">
+            <p className="text-center text-white lg:w-[700px] w-[300px]  mt-6 lg:text-2xl font-bold text-sm">
               Secure microfinancing for women in developing countries using
-              blockchain technology. Empowering financial independence and
+              blockchain technology, empowering financial independence and
               entrepreneurship.
             </p>
 
             {/* hero buttons */}
             <div className="flex flex-col items-center mt-8 space-y-4 lg:space-y-0 lg:space-x-8 lg:flex-row lg:mt-10">
-              <button className="px-12 py-2 font-bold text-black bg-white rounded-full">
+              <button
+                className="px-12 py-2 font-bold text-black bg-white rounded-full"
+                onClick={() =>
+                  (window.location.href =
+                    "mailto:annarita.macchioni@aequatore.it")
+                }
+              >
                 <div className="flex flex-row items-center space-x-4">
-                  <p>Learn More</p>
+                  <p>Contact Us</p>
                   <img src={rightArrow} alt="right-arrow" className="w-4 h-4" />
                 </div>
               </button>
 
               <button className="px-12 py-2 font-bold text-white bg-black border-2 border-white rounded-full">
-                <div className="flex flex-row items-center space-x-4">
+                <div
+                  className="flex flex-row items-center space-x-4"
+                  onClick={() => {
+                    console.log("Coming soon!");
+                    toast.success("Coming soon!");
+                  }}
+                >
                   <p>Join Us</p>
                   <img
                     src={rightArrowW}
@@ -113,7 +131,13 @@ function Landing(props) {
                 </div>
               </button>
 
-              <button className="px-12 py-2 font-bold text-black bg-white rounded-full lg:hidden">
+              <button
+                className="px-12 py-2 font-bold text-black bg-white rounded-full lg:hidden"
+                onClick={() => {
+                  console.log("Coming soon!");
+                  toast.success("Coming soon!");
+                }}
+              >
                 <div className="flex flex-row items-center space-x-4">
                   <p>To Platform</p>
                   <img src={rightArrow} alt="right-arrow" className="w-4 h-4" />
@@ -158,7 +182,7 @@ function Landing(props) {
               <p className="text-sm text-center text-white/50 lg:text-lg">
                 Financial Inclusion, Empowering Women
               </p>
-              <div className="flex flex-col p-6 pt-3 rounded-2xl lg:pt-6 bg-white/10">
+              <div className="flex flex-col p-6 pt-3 rounded-2xl lg:pt-6">
                 <p className="text-center text-white w-[300px] lg:w-[600px] lg:text-lg text-sm">
                   We provide women in rural areas of developing countries with
                   new tools and opportunities. By combining our expertise in
@@ -177,12 +201,12 @@ function Landing(props) {
                 Our Mission
               </p>
               <p className="text-sm text-center lg:hidden text-white/50 lg:text-lg">
-                Empowering Dreams, Rural Women United
+                Breaking Barriers, Building Futures: Aequatore's Mission
               </p>
               <p className="pt-3 lg:pt-0 text-center text-white w-[300px] lg:w-[600px] lg:text-lg text-sm">
-                We are dedicated to unlocking the potential of every woman,
-                regardless of her location. Through the transformative power of
-                blockchain, we strive for gender equality and sustainable
+                At the heart of our vision is the profound belief that
+                empowering women creates a ripple effect of positive change. At
+                Aequatore, we strive for gender equality and sustainable
                 development.
               </p>
               <div className="flex-col justify-center hidden space-y-2 lg:flex">
@@ -190,38 +214,34 @@ function Landing(props) {
                   Our Mission
                 </p>
                 <p className="text-sm text-center text-white/50 lg:text-lg">
-                  Empowering Dreams, Rural Women United
+                  Breaking Barriers, Building Futures: Aequatore's Mission
                 </p>
               </div>
             </div>
           </div>
 
           {/* what we do */}
-          <div className="z-10 flex flex-col self-center justify-center p-8 mt-24 lg:mt-36 mb-8 lg:w-[1200px] w-[300px] lg:items-center">
+          <div className="z-10 flex flex-col self-center justify-center p-8 mt-24 lg:mt-36 mb-8 lg:w-[1250px] w-[300px] lg:items-center">
             {/* heading */}
             <div className="flex flex-col items-center justify-center space-y-4 lg:flex-row lg:space-x-12 lg:space-y-0">
               <p className="text-4xl font-extrabold text-center text-white lg:text-6xl lg:hidden">
                 What We Do
               </p>
               <p className="text-sm text-center lg:hidden text-white/50 lg:text-lg">
-                Microfinance Reinvented for Rural Women
+                Creating new opportunities challenging the status quo
               </p>
               <div className="flex-col justify-center hidden space-y-2 lg:flex">
                 <p className="text-4xl font-extrabold text-center text-white lg:text-6xl">
                   What We Do
                 </p>
                 <p className="text-sm text-center text-white/50 lg:text-lg">
-                  Microfinance Reinvented for Rural Women
+                  Creating new opportunities challenging the status quo
                 </p>
               </div>
               <p className="pt-3 lg:pt-0 text-center text-white w-[300px] lg:w-[600px] lg:text-lg text-sm">
-                We establish a decentralized platform where women can use their
-                assets as collateral, opening doors to financial services and
-                enabling them to pursue entrepreneurial opportunities. With
-                blockchain technology, every transaction is traceable, secure,
-                and unalterable. We create opportunities to develop the
-                potential of every woman everywhere Unlocking their Economic
-                Independence
+                Through our expertise in the blockchain industry and commitment
+                to social and sustainable development, we help women achieve
+                economic and financial independence. 
               </p>
             </div>
           </div>
@@ -234,7 +254,8 @@ function Landing(props) {
                 Why it Matters
               </p>
               <p className="text-sm text-center lg:hidden text-white/50 lg:text-lg">
-                Empowerment for Her, Progress for All
+                From Microfinance to Macro-impact: Granting women's financial
+                inclusion
               </p>
               <p className="pt-3 lg:pt-0 text-center text-white w-[300px] lg:w-[600px] lg:text-lg text-sm">
                 Women in developing countries often face discrimination and
@@ -242,7 +263,7 @@ function Landing(props) {
                 food, education, and employment. In sectors such as agri-food,
                 where many women work, access to productive resources,
                 especially land, is lacking. This has profound implications for
-                their ability to access financial services and maximize their
+                their ability to access financial services and their
                 productivity.
               </p>
               <div className="flex-col justify-center hidden space-y-2 lg:flex">
@@ -250,7 +271,8 @@ function Landing(props) {
                   Why it Matters
                 </p>
                 <p className="text-sm text-center text-white/50 lg:text-lg">
-                  Empowerment for Her, Progress for All
+                  From Microfinance to Macro-impact: Granting women's financial
+                  inclusion
                 </p>
               </div>
             </div>
@@ -266,38 +288,28 @@ function Landing(props) {
               <p className="text-sm text-center text-white/50 lg:text-lg">
                 Building Futures, Blockchain-Driven Empowerment
               </p>
-              <div className="flex flex-col p-6 pt-3 rounded-2xl lg:pt-6 bg-white/10">
+              <div className="flex flex-col p-6 pt-3 rounded-2xl lg:pt-6">
                 <p className="text-center text-white w-[300px] lg:w-[600px] lg:text-lg text-sm">
-                  We offer women new tools and opportunities in rural areas of
-                  developing countries such as an user-friendly decentralized
-                  platform where women can use their assets as collateral. This
-                  opens up access to essential financial services and enables
-                  them to pursue entrepreneurial endeavours.
-                  <br />
-                  <br /> With the power of blockchain technology, every
-                  transaction is secure, traceable, and cannot be altered.
-                  Through our expertise in the blockchain industry and
-                  commitment to social and sustainable development, we help
-                  women achieve economic and financial independence. <br />
-                  <br />
-                  We believe that by empowering women, we can create a positive
-                  impact on their lives and their Thanks to our experience in
-                  the blockchain industry and social and sustainable
-                  development, we allow women to achieve economic and financial
-                  independence. Our innovative solutions leverage blockchain
-                  technology to empower women.
+                  We develop an on-chain platform where women can use their
+                  assets as collateral, opening doors to financial services, and
+                  enabling them to pursue entrepreneurial opportunities. Powered
+                  by blockchain, we ensure each transaction's traceability,
+                  security, and immutability, laying the foundation for women's
+                  economic independence.  Blockchain-Driven Empowerment instead
+                  of Building Futures, Blockchain-Driven Empowerment
                 </p>
               </div>
             </div>
           </div>
 
           {/* use cases */}
-          <div className="z-10 flex flex-col self-center justify-center p-8 mt-6 lg:mt-28 mb-36">
+          <div className="z-10 flex flex-col self-center justify-center p-8 mt-6 lg:mt-0 mb-36">
+            {/* <div className="z-10 flex flex-col self-center justify-center p-8 mt-6 lg:mt-28 mb-36"> */}
             {/* heading */}
-            <div className="flex flex-col items-center justify-center space-y-4">
-              <p className="text-4xl font-extrabold text-center text-white lg:text-6xl">
-                {/* Blockchain in Æquatore */}
-                Blockchain in Agriculture
+            {/* <div className="flex flex-col items-center justify-center space-y-4">
+              <p className="text-4xl font-extrabold text-center text-white lg:text-6xl"> */}
+            {/* Blockchain in Æquatore */}
+            {/* Blockchain in Agriculture
               </p>
               <p className="pb-4 text-center text-white text-md lg:text-lg">
                 Use Cases
@@ -360,11 +372,25 @@ function Landing(props) {
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
+            <p className="pt-16 lg:w-[1300px] text-center lg:text-lg flex flex-col self-center text-white">
+              At Aequatore, we are committed to revolutionising the agricultural
+              industry. We harness the power of blockchain technology as a
+              proven and robust ledger system. We are working towards the
+              implementation of additional cutting-edge solutions that leverage
+              the blockchain's potential to enhance supply chain transparency,
+              ensure food safety, automate processes through smart contracts,
+              promote fair trade, enable data-driven decisions, and foster
+              financial inclusion.
+            </p>
+            <p className="pt-16 lg:w-[1300px] text-center lg:text-lg flex flex-col self-center text-white">
+              Stay tuned for our future developments as we unleash the full
+              potential of blockchain in agriculture.
+            </p>
           </div>
         </div>
         {/* join us */}
-        <div className="z-10 flex flex-col items-center justify-center w-full px-16 py-12 pb-32 mt-16 space-y-16 bg-white/90">
+        {/* <div className="z-10 flex flex-col items-center justify-center w-full px-16 py-12 pb-32 mt-16 space-y-16 bg-white/90">
           <div className="flex flex-col items-center space-y-8 lg:space-y-0 lg:flex-row lg:space-x-28">
             <p className="font-extrabold text-black lg:text-[100px] text-[50px] text-center">
               Join Us.
@@ -380,28 +406,36 @@ function Landing(props) {
           <button className="px-16 py-4 text-white capitalize bg-black border-0 rounded-full btn w-fit hover:bg-black ">
             Join Us
           </button>
-        </div>
+        </div> */}
         {/* bottom bar */}
         <div className="fixed bottom-0 left-0 z-10 w-full py-3 lg:px-10 custom-bottom-bar">
           <div className="flex flex-row items-center justify-between w-full px-3 lg:px-0">
             <div className="flex flex-col space-y-0">
               <p className="hidden font-bold text-white lg:flex text-md lg:text-lg">
-                Empowering Dreams, Transforming Lives
+                Have questions or want to know more? Reach out to us for
+                partnership opportunities.
               </p>
               <p className="font-bold text-white lg:hidden text-md lg:text-lg">
-                Empowering Dreams<br></br> Transforming Lives
+                Have questions or want to know more? Reach out to us for
+                partnership opportunities.
               </p>
-              <p className="hidden text-xs text-white lg:flex lg:text-md">
+              {/* <p className="hidden text-xs text-white lg:flex lg:text-md">
                 Join our blockchain-powered initiative to empower women and
                 foster sustainable development in developing countries.
               </p>
               <p className="w-[250px] text-xs text-white lg:hidden lg:text-md">
                 Join our blockchain-powered initiative to empower women and
                 foster sustainable development in developing countries.
-              </p>
+              </p> */}
             </div>
-            <button className="px-6 py-2 text-sm font-bold text-black bg-white rounded-full lg:px-12 lg:text-lg">
-              Join Us
+            <button
+              className="px-8 py-2 text-xs font-bold text-black bg-white rounded-full lg:px-12 lg:text-lg"
+              onClick={() =>
+                (window.location.href =
+                  "mailto:annarita.macchioni@aequatore.it")
+              }
+            >
+              Contact Us
             </button>
           </div>
         </div>

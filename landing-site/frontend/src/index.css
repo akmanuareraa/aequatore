@@ -9,6 +9,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.mont-font {
+  font-family: "Montserrat", sans-serif;
+}
+
 html *,
 body * {
   cursor: none;

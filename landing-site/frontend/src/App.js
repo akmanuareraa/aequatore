@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./App.css";
+import { Toaster} from 'react-hot-toast';
 
 import Landing from "./pages/Landing";
 import Navbar from "./components/Navbar";
@@ -141,6 +142,7 @@ function App() {
   return (
     <>
       <AnimatedCursor />
+      <Toaster />
       <div className="w-full">
         <div className="custom-cursor"></div>
         <Navbar />
