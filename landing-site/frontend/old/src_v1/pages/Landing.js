@@ -295,7 +295,8 @@ function Landing(props) {
                   enabling them to pursue entrepreneurial opportunities. Powered
                   by blockchain, we ensure each transaction's traceability,
                   security, and immutability, laying the foundation for women's
-                  economic independence.  
+                  economic independence.  Blockchain-Driven Empowerment instead
+                  of Building Futures, Blockchain-Driven Empowerment
                 </p>
               </div>
             </div>
