@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-import addDocument from "../assets/svg/document-big.svg";
+import addDocument from "../../assets/svg/document-big.svg";
 
 function MyFarm(props) {
   return (

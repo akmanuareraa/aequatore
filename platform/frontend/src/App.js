@@ -4,21 +4,23 @@ import Transition from "./components/Transition";
 import "./App.css";
 import { AppProvider } from "./AppContext";
 
-import MyFarm from "./pages/MyFarm";
-import Animals from "./pages/Animals";
-import LivestockGoals from "./pages/LivestockGoals";
-import MySchedule from "./pages/MySchedule";
-import PastureManagement from "./pages/PastureManagement";
-import Equipments from "./pages/Inventory/Equipments";
-import BreederReport from "./pages/Reports/BreederReport";
-import HealthReport from "./pages/Reports/HealthReport";
-import IngredientInventory from "./pages/FeedManagement/IngredientInventory";
-import IngredientLibrary from "./pages/FeedManagement/IngredientLibrary";
-import RationLibrary from "./pages/FeedManagement/RationLibrary";
-import Suppliers from "./pages/FeedManagement/Suppliers";
-import Faq from "./pages/Support/Faq";
-import Enquiry from "./pages/Support/Enquiry";
-import Contact from "./pages/Support/Contact";
+import MyFarm from "./pages/Dashboard/MyFarm";
+import Animals from "./pages/Dashboard/Animals";
+import LivestockGoals from "./pages/Dashboard/LivestockGoals";
+import MySchedule from "./pages/Dashboard/MySchedule";
+import PastureManagement from "./pages/Dashboard/PastureManagement";
+import Equipments from "./pages/Dashboard/Inventory/Equipments";
+import BreederReport from "./pages/Dashboard/Reports/BreederReport";
+import HealthReport from "./pages/Dashboard/Reports/HealthReport";
+import IngredientInventory from "./pages/Dashboard/FeedManagement/IngredientInventory";
+import IngredientLibrary from "./pages/Dashboard/FeedManagement/IngredientLibrary";
+import RationLibrary from "./pages/Dashboard/FeedManagement/RationLibrary";
+import Suppliers from "./pages/Dashboard/FeedManagement/Suppliers";
+import Faq from "./pages/Dashboard/Support/Faq";
+import Enquiry from "./pages/Dashboard/Support/Enquiry";
+import Contact from "./pages/Dashboard/Support/Contact";
+import Signin from "./pages/UserManagement/Signin";
+import Signup from "./pages/UserManagement/Signup";
 
 function App() {
   const location = useLocation();
@@ -26,7 +28,7 @@ function App() {
   return (
     <AppProvider>
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Navigate to="/dashboard/my-farm" />} />
+        <Route path="/" element={<Navigate to="/signin" />} />
         <Route
           path="/dashboard"
           element={<Navigate to="/dashboard/my-farm" />}
@@ -67,18 +69,11 @@ function App() {
           path="/dashboard/feed-management/suppliers"
           element={<Suppliers />}
         />
-        <Route
-          path="/support/faq"
-          element={<Faq />}
-        />
-        <Route
-          path="/support/enquiry"
-          element={<Enquiry />}
-        />
-        <Route
-          path="/support/contact"
-          element={<Contact />}
-        />
+        <Route path="/support/faq" element={<Faq />} />
+        <Route path="/support/enquiry" element={<Enquiry />} />
+        <Route path="/support/contact" element={<Contact />} />
+        <Route path="/signin" element={<Signin />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </AppProvider>
   );
