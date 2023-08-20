@@ -44,11 +44,11 @@ function Navbar(props) {
       {location.pathname !== "/signin" && location.pathname !== "/signup" ? (
         <aside
           id="sidebar-multi-level-sidebar"
-          // class="fixed top-0 left-0 z-40 w-72 h-screen transition-transform -translate-x-full sm:translate-x-0"
-          class="w-[420px] h-screen transition-transform -translate-x-full sm:translate-x-0"
+          // className="fixed top-0 left-0 z-40 h-screen transition-transform -translate-x-full w-72 sm:translate-x-0"
+          className="w-[420px] h-full transition-transform -translate-x-full sm:translate-x-0"
           aria-label="Sidebar"
         >
-          <div class="h-full px-6 py-4 overflow-y-auto bg-gray-50 bg-gGray">
+          <div className="h-full px-6 py-4 overflow-y-auto bg-gray-50 bg-gGray">
             {/* logo container */}
             <div className="flex flex-row items-center justify-center py-3 space-x-2">
               <img src={symbol} className="w-10 h-10" alt="aequatore logo" />
@@ -62,11 +62,11 @@ function Navbar(props) {
             </div>
 
             {/* main menu options */}
-            <ul class="space-y-2 font-medium">
+            <ul className="space-y-2 font-medium">
               {/* my farm */}
               <li>
                 <div
-                  class={
+                  className={
                     location.pathname === "/dashboard/my-farm"
                       ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
                       : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
@@ -80,14 +80,14 @@ function Navbar(props) {
                     className="w-5 h-5"
                     alt="farm icon"
                   />
-                  <span class="ml-3">My Farm</span>
+                  <span className="ml-3">My Farm</span>
                 </div>
               </li>
 
               {/* animals */}
               <li>
                 <div
-                  class={
+                  className={
                     location.pathname === "/dashboard/animals"
                       ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
                       : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
@@ -103,14 +103,14 @@ function Navbar(props) {
                     className="w-5 h-5"
                     alt="farm icon"
                   />
-                  <span class="ml-3">Animals</span>
+                  <span className="ml-3">Animals</span>
                 </div>
               </li>
 
               {/* livestock goals */}
               <li>
                 <div
-                  class={
+                  className={
                     location.pathname === "/dashboard/livestock-goals"
                       ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer group bg-gGreen"
                       : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
@@ -126,14 +126,14 @@ function Navbar(props) {
                     className="w-5 h-5"
                     alt="farm icon"
                   />
-                  <span class="ml-3">Livestock Goals</span>
+                  <span className="ml-3">Livestock Goals</span>
                 </div>
               </li>
 
               {/* my schedule */}
               <li>
                 <div
-                  class={
+                  className={
                     location.pathname === "/dashboard/my-schedule"
                       ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
                       : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
@@ -149,14 +149,14 @@ function Navbar(props) {
                     className="w-5 h-5"
                     alt="farm icon"
                   />
-                  <span class="ml-3">My Schedule</span>
+                  <span className="ml-3">My Schedule</span>
                 </div>
               </li>
 
               {/* pasture management */}
               <li>
                 <div
-                  class={
+                  className={
                     location.pathname === "/dashboard/pasture-management"
                       ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
                       : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
@@ -172,14 +172,14 @@ function Navbar(props) {
                     className="w-5 h-5"
                     alt="farm icon"
                   />
-                  <span class="ml-3">Pasture Management</span>
+                  <span className="ml-3">Pasture Management</span>
                 </div>
               </li>
 
               {/* inventory */}
               <li>
                 <div
-                  class={
+                  className={
                     inventoryDropdown
                       ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer group "
                       : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
@@ -193,11 +193,11 @@ function Navbar(props) {
                     className="w-5 h-5"
                     alt="feed management icon"
                   />
-                  <span class="flex-1 ml-3 text-left whitespace-nowrap">
+                  <span className="flex-1 ml-3 text-left whitespace-nowrap">
                     Inventory
                   </span>
                   <svg
-                    class="w-3 h-3"
+                    className="w-3 h-3"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -205,9 +205,9 @@ function Navbar(props) {
                   >
                     <path
                       stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="m1 1 4 4 4-4"
                     />
                   </svg>
@@ -220,7 +220,7 @@ function Navbar(props) {
                 >
                   <li>
                     <div
-                      class={
+                      className={
                         location.pathname === "/dashboard/inventory/equipments"
                           ? "flex items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer group bg-gGreen ml-8"
                           : "flex items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group ml-8"
@@ -247,7 +247,7 @@ function Navbar(props) {
               {/* reports */}
               <li>
                 <div
-                  class={
+                  className={
                     reportsDropdown
                       ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg hover:cursor-pointer group text-white"
                       : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
@@ -261,11 +261,11 @@ function Navbar(props) {
                     className="w-5 h-5"
                     alt="feed management icon"
                   />
-                  <span class="flex-1 ml-3 text-left whitespace-nowrap">
+                  <span className="flex-1 ml-3 text-left whitespace-nowrap">
                     Reports
                   </span>
                   <svg
-                    class="w-3 h-3"
+                    className="w-3 h-3"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -273,9 +273,9 @@ function Navbar(props) {
                   >
                     <path
                       stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="m1 1 4 4 4-4"
                     />
                   </svg>
@@ -288,7 +288,7 @@ function Navbar(props) {
                 >
                   <li>
                     <div
-                      class={
+                      className={
                         location.pathname ===
                         "/dashboard/reports/breeder-report"
                           ? "flex items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen ml-8"
@@ -312,7 +312,7 @@ function Navbar(props) {
                   </li>
                   <li>
                     <div
-                      class={
+                      className={
                         location.pathname === "/dashboard/reports/health-report"
                           ? "flex items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen ml-8"
                           : "flex items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group ml-8"
@@ -339,7 +339,7 @@ function Navbar(props) {
               {/* feed management */}
               <li>
                 <div
-                  class={
+                  className={
                     feedManagementDropdown
                       ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg hover:cursor-pointer group text-white"
                       : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
@@ -357,11 +357,11 @@ function Navbar(props) {
                     className="w-5 h-5"
                     alt="feed management icon"
                   />
-                  <span class="flex-1 ml-3 text-left whitespace-nowrap">
+                  <span className="flex-1 ml-3 text-left whitespace-nowrap">
                     Feed Management
                   </span>
                   <svg
-                    class="w-3 h-3"
+                    className="w-3 h-3"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -369,9 +369,9 @@ function Navbar(props) {
                   >
                     <path
                       stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="m1 1 4 4 4-4"
                     />
                   </svg>
@@ -384,7 +384,7 @@ function Navbar(props) {
                 >
                   <li>
                     <div
-                      class={
+                      className={
                         location.pathname ===
                         "/dashboard/feed-management/ration-library"
                           ? "flex items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen ml-8"
@@ -408,7 +408,7 @@ function Navbar(props) {
                   </li>
                   <li>
                     <div
-                      class={
+                      className={
                         location.pathname ===
                         "/dashboard/feed-management/ingredient-inventory"
                           ? "flex items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen ml-8"
@@ -434,7 +434,7 @@ function Navbar(props) {
                   </li>
                   <li>
                     <div
-                      class={
+                      className={
                         location.pathname ===
                         "/dashboard/feed-management/ingredient-library"
                           ? "flex items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer group bg-gGreen ml-8"
@@ -460,7 +460,7 @@ function Navbar(props) {
                   </li>
                   <li>
                     <div
-                      class={
+                      className={
                         location.pathname ===
                         "/dashboard/feed-management/suppliers"
                           ? "flex items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer group bg-gGreen ml-8"
@@ -491,11 +491,11 @@ function Navbar(props) {
             </div>
 
             {/* support options */}
-            <ul class="space-y-2 font-medium">
+            <ul className="space-y-2 font-medium">
               {/* faqs */}
               <li>
                 <div
-                  class={
+                  className={
                     location.pathname === "/support/faq"
                       ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
                       : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
@@ -507,14 +507,14 @@ function Navbar(props) {
                     className="w-5 h-5"
                     alt="farm icon"
                   />
-                  <span class="ml-3">FAQs</span>
+                  <span className="ml-3">FAQs</span>
                 </div>
               </li>
 
               {/* enquiry */}
               <li>
                 <div
-                  class={
+                  className={
                     location.pathname === "/support/enquiry"
                       ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
                       : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
@@ -530,14 +530,14 @@ function Navbar(props) {
                     className="w-5 h-5"
                     alt="farm icon"
                   />
-                  <span class="ml-3">Enquiry</span>
+                  <span className="ml-3">Enquiry</span>
                 </div>
               </li>
 
               {/* contact us */}
               <li>
                 <div
-                  class={
+                  className={
                     location.pathname === "/support/contact"
                       ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
                       : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
@@ -553,7 +553,7 @@ function Navbar(props) {
                     className="w-5 h-5"
                     alt="farm icon"
                   />
-                  <span class="ml-3">Contact Us</span>
+                  <span className="ml-3">Contact Us</span>
                 </div>
               </li>
             </ul>

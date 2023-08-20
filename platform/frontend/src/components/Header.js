@@ -72,7 +72,7 @@ function Header(props) {
               <ul className="p-2 shadow menu dropdown-content z-[1] bg-white w-full mt-4 space-y-2 ">
                 <li>
                   <div
-                    class="flex flex-row px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group hover:bg-gGreen justify-end"
+                    className="flex flex-row justify-end px-4 py-3 text-black text-gray-900 rounded-lg hover:cursor-pointer group hover:bg-gGreen"
                     onClick={() => navigate("/dashboard")}
                   >
                     {/* <img
@@ -84,12 +84,12 @@ function Header(props) {
                   className="w-5 h-5"
                   alt="farm icon"
                 /> */}
-                    <span class="">Logout</span>
+                    <span className="">Logout</span>
                   </div>
                 </li>
                 <li>
                   <div
-                    class="flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group hover:bg-gGreen justify-end"
+                    className="flex flex-row items-center justify-end px-4 py-3 text-black text-gray-900 rounded-lg hover:cursor-pointer group hover:bg-gGreen"
                     onClick={() => navigate("/dashboard")}
                   >
                     {/* <img
@@ -101,7 +101,7 @@ function Header(props) {
                   className="w-5 h-5"
                   alt="farm icon"
                 /> */}
-                    <span class="">Profile</span>
+                    <span className="">Profile</span>
                   </div>
                 </li>
               </ul>

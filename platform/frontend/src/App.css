@@ -91,3 +91,16 @@
     #65a500
   ); /* Default to green if not provided */
 }
+
+/* tab CSS */
+.tabs-boxed .tab-active:not(.tab-disabled):not([disabled]) {
+  background-color: #1db954;
+  color: black;
+  border-radius: 0%;
+}
+
+.tabs-boxed .tab-active:not(.tab-disabled):not([disabled]):hover {
+  background-color: #1db954;
+  color: black;
+  border-radius: 0%;
+}

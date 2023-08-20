@@ -122,12 +122,12 @@ export const AppProvider = ({ children }) => {
       }}
     >
       <Toaster />
-      <div className="flex flex-row">
+      <div className="flex flex-row h-screen">
         <Navbar />
         {loading.status === "true" ? (
           <Loading message={loading.message} />
         ) : null}
-        <div className="flex flex-col w-full bg-black">
+        <div className="flex flex-col w-full overflow-x-hidden bg-black">
           <Header />
           <Breadcrumbs />
           {children}
