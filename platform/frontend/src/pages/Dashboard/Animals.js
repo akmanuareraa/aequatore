@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
+import NoAnimal from "../../components/Dashboard/Animals/NoAnimal";
+import AllAnimalView from "../../components/Dashboard/Animals/AllAnimalView";
 
 function Animals(props) {
+  const [tabView, setTabView] = useState("all");
   return (
     <div className="w-full h-full px-4 overflow-x-hidden overflow-y-scroll bg-black">
       <div>
@@ -25,7 +28,9 @@ function Animals(props) {
           </div>
         </div>
 
-        {/* table */}
+        <NoAnimal />
+
+        <AllAnimalView />
       </div>
     </div>
   );
