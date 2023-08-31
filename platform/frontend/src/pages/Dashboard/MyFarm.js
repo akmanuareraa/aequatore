@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { AppContext } from "../../AppContext";
 
 import moreInfo from "../../assets/svg/more-info.svg";
 import NoFarm from "../../components/Dashboard/MyFarm/NoFarm";
@@ -7,7 +8,8 @@ import NewFarm from "../../components/Dashboard/MyFarm/NewFarm";
 import FarmView from "../../components/Dashboard/MyFarm/FarmView";
 
 function MyFarm(props) {
-  const [windowState, setWindowState] = useState("farmView");
+  const { appData, setAppData } = useContext(AppContext);
+  const [windowState, setWindowState] = useState("");
   const [formData, setFormData] = useState({
     farmName: "",
     farmOwner: "",
@@ -73,6 +75,27 @@ function MyFarm(props) {
   const submitForm = () => {
     console.log(formData);
   };
+
+  useEffect(() => {
+    console.log("appData", appData);
+    if (Object.keys(appData.userProfile.farm).length > 0) {
+      setWindowState("farmView");
+    } else {
+      setWindowState("noFarm");
+    }
+    setAppData((prevState) => {
+      return {
+        ...prevState,
+        currentHeaderTitle: "My Farm",
+        breadCrumbs: [
+          {
+            label: "My Farm",
+            link: "/dashboard/my-farm",
+          },
+        ],
+      };
+    });
+  }, []);
 
   return (
     <div className="w-full h-full px-4 overflow-x-hidden overflow-y-scroll bg-black">

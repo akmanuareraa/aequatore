@@ -1,13 +1,18 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { AppContext } from "../AppContext";
 
 import rightButton from "../assets/svg/right-arrow.svg";
 import leftButton from "../assets/svg/left-arrow.svg";
 import downArrow from "../assets/svg/down-arrow.svg";
 import profilePic from "../assets/img/profile.png";
 import HeaderLite from "./HeaderLite";
+import { auth } from "../services/firebase.config";
+import { toast } from "react-hot-toast";
 
 function Header(props) {
+  const { appData, setAppData } = useContext(AppContext);
   const location = useLocation();
   const navigate = useNavigate();
   return (
@@ -35,7 +40,9 @@ function Header(props) {
 
               {/* page title container */}
               <div>
-                <p className="text-2xl font-bold text-white">Dashboard</p>
+                <p className="text-2xl font-bold text-white">
+                  {appData.currentHeaderTitle}
+                </p>
               </div>
             </div>
 
@@ -45,21 +52,21 @@ function Header(props) {
                 {/* outer container */}
                 <div className="flex flex-row items-center space-x-4">
                   {/* profile photo */}
-                  <div className="avatar">
+                  {/* <div className="avatar">
                     <div className="w-12 h-12 rounded-full ring ring-white ring-offset-base-100 ring-offset-1">
                       <img src={profilePic} />
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* name and email container */}
                   <div className="flex flex-col items-start justify-start space-y-0">
                     {/* name */}
                     <p className="text-lg font-bold text-white capitalize">
-                      Enrico
+                      {appData.userProfile.name}
                     </p>
                     {/* email */}
                     <p className="text-sm text-white lowercase">
-                      enrico@gmail.com
+                      {appData.userProfile.email}
                     </p>
                   </div>
 
@@ -73,7 +80,11 @@ function Header(props) {
                 <li>
                   <div
                     className="flex flex-row justify-end px-4 py-3 text-black text-gray-900 rounded-lg hover:cursor-pointer group hover:bg-gGreen"
-                    onClick={() => navigate("/dashboard")}
+                    onClick={async () => {
+                      await signOut(auth);
+                      navigate("/signin");
+                      toast.success("Logged out successfully");
+                    }}
                   >
                     {/* <img
                   src={
@@ -87,23 +98,23 @@ function Header(props) {
                     <span className="">Logout</span>
                   </div>
                 </li>
-                <li>
+                {/* <li>
                   <div
                     className="flex flex-row items-center justify-end px-4 py-3 text-black text-gray-900 rounded-lg hover:cursor-pointer group hover:bg-gGreen"
                     onClick={() => navigate("/dashboard")}
                   >
-                    {/* <img
-                  src={
-                    location.pathname === "/dashboard/animals"
-                      ? animalsB
-                      : animalsW
-                  }
-                  className="w-5 h-5"
-                  alt="farm icon"
-                /> */}
+                    <img
+                      src={
+                        location.pathname === "/dashboard/animals"
+                          ? animalsB
+                          : animalsW
+                      }
+                      className="w-5 h-5"
+                      alt="farm icon"
+                    />
                     <span className="">Profile</span>
                   </div>
-                </li>
+                </li> */}
               </ul>
             </details>
           </div>

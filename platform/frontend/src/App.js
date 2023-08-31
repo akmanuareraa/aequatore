@@ -21,6 +21,9 @@ import Enquiry from "./pages/Dashboard/Support/Enquiry";
 import Contact from "./pages/Dashboard/Support/Contact";
 import Signin from "./pages/UserManagement/Signin";
 import Signup from "./pages/UserManagement/Signup";
+import RegisterAnimal from "./components/Dashboard/Animals/RegisterAnimal";
+import CreateNewGoal from "./components/Dashboard/LivestockGoals/CreateNewGoal";
+import PrivateRouteGuard from "./PrivateRouteGuard";
 
 function App() {
   const location = useLocation();
@@ -28,52 +31,128 @@ function App() {
   return (
     <AppProvider>
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Navigate to="/signin" />} />
+        <Route path="/" element={<Navigate to="/dashboard/my-farm" />} />
+        <Route path="/signin" element={<Signin />} />
+        <Route path="/signup" element={<Signup />} />
         <Route
           path="/dashboard"
           element={<Navigate to="/dashboard/my-farm" />}
         />
-        <Route path="/dashboard/my-farm" element={<MyFarm />} />
-        <Route path="/dashboard/livestock-goals" element={<LivestockGoals />} />
-        <Route path="/dashboard/animals" element={<Animals />} />
-        <Route path="/dashboard/my-schedule" element={<MySchedule />} />
+        <Route
+          path="/dashboard/my-farm"
+          element={
+            <PrivateRouteGuard>
+              <MyFarm />
+            </PrivateRouteGuard>
+          }
+        />
+        <Route
+          path="/dashboard/livestock-goals"
+          element={
+            <PrivateRouteGuard>
+              <LivestockGoals />
+            </PrivateRouteGuard>
+          }
+        />
+        <Route
+          path="/dashboard/animals"
+          element={
+            <PrivateRouteGuard>
+              <Animals />
+            </PrivateRouteGuard>
+          }
+        />
+        <Route
+          path="/dashboard/my-schedule"
+          element={
+            <PrivateRouteGuard>
+              <MySchedule />
+            </PrivateRouteGuard>
+          }
+        />
         <Route
           path="/dashboard/pasture-management"
-          element={<PastureManagement />}
+          element={
+            <PrivateRouteGuard>
+              <PastureManagement />
+            </PrivateRouteGuard>
+          }
         />
         <Route
           path="/dashboard/inventory/equipments"
-          element={<Equipments />}
+          element={
+            <PrivateRouteGuard>
+              <Equipments />
+            </PrivateRouteGuard>
+          }
         />
         <Route
           path="/dashboard/reports/breeder-report"
-          element={<BreederReport />}
+          element={
+            <PrivateRouteGuard>
+              <BreederReport />
+            </PrivateRouteGuard>
+          }
         />
         <Route
           path="/dashboard/reports/health-report"
-          element={<HealthReport />}
+          element={
+            <PrivateRouteGuard>
+              <HealthReport />
+            </PrivateRouteGuard>
+          }
         />
         <Route
           path="/dashboard/feed-management/ingredient-inventory"
-          element={<IngredientInventory />}
+          element={
+            <PrivateRouteGuard>
+              <IngredientInventory />
+            </PrivateRouteGuard>
+          }
         />
         <Route
           path="/dashboard/feed-management/ingredient-library"
-          element={<IngredientLibrary />}
+          element={
+            <PrivateRouteGuard>
+              <IngredientLibrary />
+            </PrivateRouteGuard>
+          }
         />
         <Route
           path="/dashboard/feed-management/ration-library"
-          element={<RationLibrary />}
+          element={
+            <PrivateRouteGuard>
+              <RationLibrary />
+            </PrivateRouteGuard>
+          }
         />
         <Route
           path="/dashboard/feed-management/suppliers"
-          element={<Suppliers />}
+          element={
+            <PrivateRouteGuard>
+              <Suppliers />
+            </PrivateRouteGuard>
+          }
+        />
+        <Route
+          path="/dashboard/animals/register"
+          element={
+            <PrivateRouteGuard>
+              <RegisterAnimal />
+            </PrivateRouteGuard>
+          }
+        />
+        <Route
+          path="/dashboard/livestock-goals/create"
+          element={
+            <PrivateRouteGuard>
+              <CreateNewGoal />
+            </PrivateRouteGuard>
+          }
         />
         <Route path="/support/faq" element={<Faq />} />
         <Route path="/support/enquiry" element={<Enquiry />} />
         <Route path="/support/contact" element={<Contact />} />
-        <Route path="/signin" element={<Signin />} />
-        <Route path="/signup" element={<Signup />} />
       </Routes>
     </AppProvider>
   );

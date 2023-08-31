@@ -1,12 +1,34 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
+import { AppContext } from "../../../AppContext";
 
 import moreInfo from "../../../assets/svg/more-info.svg";
 
 function NewFarm(props) {
+  const { appData, setAppData } = useContext(AppContext);
+
+  useEffect(() => {
+    setAppData((prevState) => {
+      return {
+        ...prevState,
+        currentHeaderTitle: "New Farm",
+        breadCrumbs: [
+          {
+            label: "My Farm",
+            link: "/dashboard/my-farm",
+          },
+          {
+            label: "New Farm",
+            link: "/dashboard/my-farm",
+          },
+        ],
+      };
+    });
+  }, []);
+
   return (
     <div>
       {/* titlebar */}
-      <div className="flex flex-row items-center justify-between">
+      <div className="flex flex-row items-center justify-between mt-6">
         {/* title */}
         <p className="text-2xl font-bold text-white">New Farm Registration</p>
         {/* side button container */}

@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { auth, db } from "../../services/firebase.config";
+import { useNavigate } from "react-router-dom";
 
 import addGreen from "../../assets/svg/add-green.svg";
 import backbutton from "../../assets/svg/left-arrow.svg";
 import removeGreen from "../../assets/svg/remove-green.svg";
 
 function LivestockSignup(props) {
+  const navigate = useNavigate();
+  const collectionRef = collection(db, "users");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -37,58 +43,76 @@ function LivestockSignup(props) {
   };
 
   const handleFormSubmit = () => {
-    if (formData.name === "") {
-      toast.error("Please enter your name");
-    } else {
-      if (formData.email === "") {
-        toast.error("Please enter your email");
-      } else {
-        if (formData.password === "" || formData.confirmPassword === "") {
-          toast.error("Please provide a password/confirm password");
-          return;
-        } else {
-          if (formData.password !== formData.confirmPassword) {
-            toast.error("Passwords do not match");
-            return;
-          } else {
-            if (formData.age === "") {
-              toast.error("Please enter your age");
-              return;
-            } else {
-              if (formData.income === "") {
-                toast.error("Please enter your income");
-                return;
-              } else {
-                if (formData.householdSize === "") {
-                  toast.error("Please enter your household size");
-                  return;
-                } else {
-                  if (livestockList.length === 0) {
-                    toast.error("Please enter your livestock details");
-                    return;
-                  } else {
-                    for (let i = 0; i < livestockList.length; i++) {
-                      if (livestockList[i].name === "") {
-                        toast.error("Please enter livestock name");
-                        return;
-                      } else {
-                        if (livestockList[i].population === "") {
-                          toast.error("Please enter livestock population");
-                          return;
-                        }
-                      }
-                    }
-                    console.log("form data", formData, livestockList);
-                  }
-                }
-              }
-            }
-          }
-        }
+    const validations = [
+      [formData.name, "Please enter your name"],
+      [formData.email, "Please enter your email"],
+      [formData.password, "Please provide a password"],
+      [formData.confirmPassword, "Please confirm your password"],
+      [
+        formData.password === formData.confirmPassword,
+        "Passwords do not match",
+      ],
+      [formData.password.length >= 6, "Password must be atleast 6 characters"],
+      [formData.age, "Please enter your age"],
+      [formData.income, "Please enter your income"],
+      [formData.householdSize, "Please enter your household size"],
+      [livestockList.length !== 0, "Please enter your livestock details [1]"],
+    ];
+
+    for (const [field, errorMessage] of validations) {
+      if (!field) {
+        toast.error(errorMessage);
+        console.log("error", livestockList.length);
+        return;
       }
     }
+
+    for (const livestock of livestockList) {
+      if (!livestock.name || !livestock.population) {
+        toast.error("Please enter livestock details [2]");
+        return;
+      }
+    }
+
+    console.log("form data", formData, livestockList);
+
+    createUserWithEmailAndPassword(auth, formData.email, formData.password)
+      .then(async (userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log("user", user);
+
+        await addDoc(collectionRef, {
+          userUid: user.uid,
+          name: formData.name,
+          email: formData.email,
+          age: formData.age,
+          income: formData.income,
+          householdSize: formData.householdSize,
+          livestock: livestockList,
+          role: "livestockOwner",
+          createdAt: serverTimestamp(),
+          farm: {},
+          animals: [],
+          livestockGoals: [],
+        })
+          .then((docRef) => {
+            console.log("Document written with ID: ", docRef.id);
+          })
+          .catch((error) => {
+            toast.error("Error adding document: ", error);
+          });
+
+        toast.success("Signup Successful");
+        navigate("/signin");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        toast.error(errorMessage);
+      });
   };
-  
+
   return (
     <div className="flex items-center justify-center pt-12">
       {/* inner container */}

@@ -36,8 +36,8 @@ function Navbar(props) {
   const [reportsDropdown, setReportsDropdown] = useState(false);
 
   useEffect(() => {
-    console.log(location.pathname);
-  },[])
+    // console.log(location.pathname);
+  }, []);
 
   return (
     <>
@@ -56,82 +56,87 @@ function Navbar(props) {
             </div>
             <div className="mt-2 mb-0 divider before:bg-white/10 after:bg-white/10"></div>
 
-            {/* main menu title */}
-            <div className="px-4 pt-6 pb-8">
-              <p className="tracking-[13px] text-white/40 text-sm">MAIN MENU</p>
-            </div>
+            <div className="">
+              {/* main menu title */}
+              <div className="px-4 pt-6 pb-8">
+                <p className="tracking-[13px] text-white/40 text-sm">
+                  MAIN MENU
+                </p>
+              </div>
 
-            {/* main menu options */}
-            <ul className="space-y-2 font-medium">
-              {/* my farm */}
-              <li>
-                <div
-                  className={
-                    location.pathname === "/dashboard/my-farm"
-                      ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
-                      : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
-                  }
-                  onClick={() => navigate("/dashboard/my-farm")}
-                >
-                  <img
-                    src={
-                      location.pathname === "/dashboard/my-farm" ? farmB : farmW
+              {/* main menu options */}
+              <ul className="space-y-2 font-medium">
+                {/* my farm */}
+                <li>
+                  <div
+                    className={
+                      location.pathname === "/dashboard/my-farm"
+                        ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
+                        : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
                     }
-                    className="w-5 h-5"
-                    alt="farm icon"
-                  />
-                  <span className="ml-3">My Farm</span>
-                </div>
-              </li>
+                    onClick={() => navigate("/dashboard/my-farm")}
+                  >
+                    <img
+                      src={
+                        location.pathname === "/dashboard/my-farm"
+                          ? farmB
+                          : farmW
+                      }
+                      className="w-5 h-5"
+                      alt="farm icon"
+                    />
+                    <span className="ml-3">My Farm</span>
+                  </div>
+                </li>
 
-              {/* animals */}
-              <li>
-                <div
-                  className={
-                    location.pathname === "/dashboard/animals"
-                      ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
-                      : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
-                  }
-                  onClick={() => navigate("/dashboard/animals")}
-                >
-                  <img
-                    src={
+                {/* animals */}
+                <li>
+                  <div
+                    className={
                       location.pathname === "/dashboard/animals"
-                        ? animalsB
-                        : animalsW
+                        ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
+                        : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
                     }
-                    className="w-5 h-5"
-                    alt="farm icon"
-                  />
-                  <span className="ml-3">Animals</span>
-                </div>
-              </li>
+                    onClick={() => navigate("/dashboard/animals")}
+                  >
+                    <img
+                      src={
+                        location.pathname === "/dashboard/animals"
+                          ? animalsB
+                          : animalsW
+                      }
+                      className="w-5 h-5"
+                      alt="farm icon"
+                    />
+                    <span className="ml-3">Animals</span>
+                  </div>
+                </li>
 
-              {/* livestock goals */}
-              <li>
-                <div
-                  className={
-                    location.pathname === "/dashboard/livestock-goals"
-                      ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer group bg-gGreen"
-                      : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
-                  }
-                  onClick={() => navigate("/dashboard/livestock-goals")}
-                >
-                  <img
-                    src={
+                {/* livestock goals */}
+                <li>
+                  <div
+                    className={
                       location.pathname === "/dashboard/livestock-goals"
-                        ? goalsB
-                        : goalsW
+                        ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer group bg-gGreen"
+                        : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
                     }
-                    className="w-5 h-5"
-                    alt="farm icon"
-                  />
-                  <span className="ml-3">Livestock Goals</span>
-                </div>
-              </li>
+                    onClick={() => navigate("/dashboard/livestock-goals")}
+                  >
+                    <img
+                      src={
+                        location.pathname === "/dashboard/livestock-goals"
+                          ? goalsB
+                          : goalsW
+                      }
+                      className="w-5 h-5"
+                      alt="farm icon"
+                    />
+                    <span className="ml-3">Livestock Goals</span>
+                  </div>
+                </li>
 
-              {/* my schedule */}
-              <li>
+                {/* my schedule */}
+                {/* <li>
                 <div
                   className={
                     location.pathname === "/dashboard/my-schedule"
@@ -151,10 +156,10 @@ function Navbar(props) {
                   />
                   <span className="ml-3">My Schedule</span>
                 </div>
-              </li>
+              </li> */}
 
-              {/* pasture management */}
-              <li>
+                {/* pasture management */}
+                {/* <li>
                 <div
                   className={
                     location.pathname === "/dashboard/pasture-management"
@@ -174,10 +179,10 @@ function Navbar(props) {
                   />
                   <span className="ml-3">Pasture Management</span>
                 </div>
-              </li>
+              </li> */}
 
-              {/* inventory */}
-              <li>
+                {/* inventory */}
+                {/* <li>
                 <div
                   className={
                     inventoryDropdown
@@ -242,10 +247,10 @@ function Navbar(props) {
                     </div>
                   </li>
                 </ul>
-              </li>
+              </li> */}
 
-              {/* reports */}
-              <li>
+                {/* reports */}
+                {/* <li>
                 <div
                   className={
                     reportsDropdown
@@ -334,10 +339,10 @@ function Navbar(props) {
                     </div>
                   </li>
                 </ul>
-              </li>
+              </li> */}
 
-              {/* feed management */}
-              <li>
+                {/* feed management */}
+                {/* <li>
                 <div
                   className={
                     feedManagementDropdown
@@ -483,80 +488,81 @@ function Navbar(props) {
                     </div>
                   </li>
                 </ul>
-              </li>
-            </ul>
-            {/* support title */}
-            <div className="px-4 pt-24 pb-5">
-              <p className="tracking-[13px] text-white/40 text-sm">SUPPORT</p>
-            </div>
+              </li> */}
+              </ul>
+              {/* support title */}
+              <div className="px-4 pb-5 pt-[400px]">
+                <p className="tracking-[13px] text-white/40 text-sm">SUPPORT</p>
+              </div>
 
-            {/* support options */}
-            <ul className="space-y-2 font-medium">
-              {/* faqs */}
-              <li>
-                <div
-                  className={
-                    location.pathname === "/support/faq"
-                      ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
-                      : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
-                  }
-                  onClick={() => navigate("/support/faq")}
-                >
-                  <img
-                    src={location.pathname === "/support/faq" ? faqB : faqW}
-                    className="w-5 h-5"
-                    alt="farm icon"
-                  />
-                  <span className="ml-3">FAQs</span>
-                </div>
-              </li>
+              {/* support options */}
+              <ul className="space-y-2 font-medium">
+                {/* faqs */}
+                <li>
+                  <div
+                    className={
+                      location.pathname === "/support/faq"
+                        ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
+                        : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
+                    }
+                    onClick={() => navigate("/support/faq")}
+                  >
+                    <img
+                      src={location.pathname === "/support/faq" ? faqB : faqW}
+                      className="w-5 h-5"
+                      alt="farm icon"
+                    />
+                    <span className="ml-3">FAQs</span>
+                  </div>
+                </li>
 
-              {/* enquiry */}
-              <li>
-                <div
-                  className={
-                    location.pathname === "/support/enquiry"
-                      ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
-                      : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
-                  }
-                  onClick={() => navigate("/support/enquiry")}
-                >
-                  <img
-                    src={
+                {/* enquiry */}
+                <li>
+                  <div
+                    className={
                       location.pathname === "/support/enquiry"
-                        ? enquiriesB
-                        : enquiriesW
+                        ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
+                        : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
                     }
-                    className="w-5 h-5"
-                    alt="farm icon"
-                  />
-                  <span className="ml-3">Enquiry</span>
-                </div>
-              </li>
+                    onClick={() => navigate("/support/enquiry")}
+                  >
+                    <img
+                      src={
+                        location.pathname === "/support/enquiry"
+                          ? enquiriesB
+                          : enquiriesW
+                      }
+                      className="w-5 h-5"
+                      alt="farm icon"
+                    />
+                    <span className="ml-3">Enquiry</span>
+                  </div>
+                </li>
 
-              {/* contact us */}
-              <li>
-                <div
-                  className={
-                    location.pathname === "/support/contact"
-                      ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
-                      : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
-                  }
-                  onClick={() => navigate("/support/contact")}
-                >
-                  <img
-                    src={
+                {/* contact us */}
+                <li>
+                  <div
+                    className={
                       location.pathname === "/support/contact"
-                        ? contactUsB
-                        : contactUsW
+                        ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
+                        : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
                     }
-                    className="w-5 h-5"
-                    alt="farm icon"
-                  />
-                  <span className="ml-3">Contact Us</span>
-                </div>
-              </li>
-            </ul>
+                    onClick={() => navigate("/support/contact")}
+                  >
+                    <img
+                      src={
+                        location.pathname === "/support/contact"
+                          ? contactUsB
+                          : contactUsW
+                      }
+                      className="w-5 h-5"
+                      alt="farm icon"
+                    />
+                    <span className="ml-3">Contact Us</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
         </aside>
       ) : null}

@@ -109,3 +109,11 @@
   background-color: #1db954;
   border-color: #1db954;
 }
+
+.dropdown-custom {
+  /* position: fixed; */
+}
+
+.dropdown:is(:not(details)) .dropdown-content {
+  z-index: 999;
+}
