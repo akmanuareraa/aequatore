@@ -12,7 +12,7 @@ function NoGoals(props) {
       <p>No Goals Created</p>
       <button
         className="px-8 text-xl font-bold capitalize border-0 rounded-full btn bg-gGreen"
-        onClick={() => navigate("/dashboard/livestock-goals/create")}
+        onClick={() => props.setTabView("register")}
       >
         Create a Goal
       </button>

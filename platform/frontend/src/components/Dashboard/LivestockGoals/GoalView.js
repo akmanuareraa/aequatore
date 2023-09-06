@@ -3,10 +3,11 @@ import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../../AppContext";
 
-function CreateNewGoal(props) {
+function GoalView(props) {
   const { appData, setAppData, updateLivestockGoalsForUser } =
     useContext(AppContext);
   const navigate = useNavigate();
+  const [editMode, setEditMode] = useState(false);
 
   const [dropdownState, setDropdownState] = useState({
     goalType: false,
@@ -26,20 +27,38 @@ function CreateNewGoal(props) {
     console.log("submitting form", formData);
     if (validateForm()) {
       console.log("form validated");
-      // generate a random number to use as UID
-      const id = Math.floor(Math.random() * 1000000000);
-      console.log("id:", id);
-      let tempFormData = formData;
-      tempFormData.id = id;
-      let tempArr = appData.userProfile.livestockGoals;
-      tempArr.push(tempFormData);
+      // remove an specific object from the tempArr using it's id
+      let tempArr = appData.userProfile.livestockGoals.filter(
+        (item) => item.id !== formData.id
+      );
+      tempArr.push(formData);
       const updateResult = await updateLivestockGoalsForUser(tempArr);
       if (updateResult === true) {
         toast.success("Goal created successfully");
-        props.setTabView("all");
+        setAppData((prevState) => {
+          return {
+            ...prevState,
+            livestockGoalInView: formData,
+          };
+        });
+        setEditMode(false);
       } else {
         toast.error("Error occured. Please try again..");
       }
+    }
+  };
+
+  const deleteGoal = async () => {
+    console.log("deleting goal");
+    let tempArr = appData.userProfile.livestockGoals.filter(
+      (item) => item.id !== formData.id
+    );
+    const updateResult = await updateLivestockGoalsForUser(tempArr);
+    if (updateResult === true) {
+      toast.success("Goal deleted successfully");
+      navigate("/dashboard/livestock-goals");
+    } else {
+      toast.error("Error occured. Please try again.");
     }
   };
 
@@ -59,32 +78,53 @@ function CreateNewGoal(props) {
     }
   };
 
+  useEffect(() => {
+    if (Object.keys(appData.livestockGoalInView).length > 0) {
+      setFormData(appData.livestockGoalInView);
+    } else {
+      navigate("/dashboard/livestock-goals");
+    }
+  }, [appData.livestockGoalInView]);
+
   return (
     <div className="w-full h-full px-4 overflow-x-hidden overflow-y-scroll bg-black">
       <div>
         {/* titlebar */}
         <div className="flex flex-row items-center justify-between">
           {/* title */}
-          <p className="text-2xl font-bold text-white">Create a Goal</p>
+          <p className="text-2xl font-bold text-white">Edit Goal</p>
           {/* side button container */}
           <div className="flex flex-row items-center space-x-4">
+            {editMode === true ? (
+              <button
+                className="px-10 py-3 font-bold text-black capitalize border-4 rounded-full border-gGreen text-md h-fit btn btn-sm bg-gGreen"
+                onClick={() => submitForm()}
+              >
+                Save
+              </button>
+            ) : null}
             <button
               className="px-10 py-3 font-bold text-black capitalize border-4 rounded-full border-gGreen text-md h-fit btn btn-sm bg-gGreen"
-              onClick={() => submitForm()}
+              onClick={() => {
+                setEditMode(!editMode);
+                setFormData(appData.livestockGoalInView);
+              }}
             >
-              Save
+              {editMode === true ? "Cancel Edit" : "Edit"}
+            </button>
+            <button
+              className="px-10 py-3 font-bold capitalize bg-black border-4 rounded-full text-red border-red text-md h-fit btn btn-sm hover:text-black hover:bg-red hover:border-red"
+              onClick={() => deleteGoal()}
+            >
+              Delete
             </button>
             <button
               className="px-10 py-3 font-bold text-white capitalize bg-black border-4 border-white rounded-full text-md h-fit btn btn-sm hover:text-black"
               onClick={() => {
-                if (props.appData.userProfile.livestockGoals.length === 0) {
-                  props.setTabView("no");
-                } else {
-                  props.setTabView("all");
-                }
+                navigate("/dashboard/livestock-goals");
               }}
             >
-              Cancel
+              Back
             </button>
           </div>
         </div>
@@ -98,7 +138,8 @@ function CreateNewGoal(props) {
             <input
               type="text"
               placeholder="Enter the goal name"
-              className="w-[350px] px-4 py-6 text-white border-white rounded-none text-md bg-gGray input input-bordered"
+              disabled={!editMode}
+              className="w-[350px] px-4 py-6 text-white border-white rounded-none text-md bg-gGray input input-bordered disabled:text-white disabled:bg-white/10 disabled:cursor-not-allowed"
               value={formData.goalName}
               onChange={(e) => {
                 setFormData((prevState) => {
@@ -120,7 +161,7 @@ function CreateNewGoal(props) {
             </label>
             <div className=" dropdown">
               <button
-                className={`dropdown-trigger px-4 py-[17px] text-white capitalize border-white rounded-none border-1 btn bg-gGray h-fit hover:bg-black hover:text-white w-[350px] justify-start ${
+                className={`dropdown-trigger px-4 py-[17px] text-white capitalize border-white rounded-none border-1 btn bg-gGray h-fit hover:bg-black hover:text-white w-[350px] justify-start disabled:text-white disabled:bg-white/10 disabled:cursor-not-allowed ${
                   dropdownState.goalType ? "active" : ""
                 }`}
                 onClick={() =>
@@ -131,6 +172,7 @@ function CreateNewGoal(props) {
                     };
                   })
                 }
+                disabled={!editMode}
               >
                 {formData.goalType || "Choose Goal Type"}
               </button>
@@ -214,7 +256,8 @@ function CreateNewGoal(props) {
             <input
               type="text"
               placeholder="Enter the base value"
-              className="w-[350px] px-4 py-6 text-white border-white rounded-none text-md bg-gGray input input-bordered"
+              disabled={!editMode}
+              className="w-[350px] px-4 py-6 text-white border-white rounded-none text-md bg-gGray input input-bordered disabled:text-white disabled:bg-white/10 disabled:cursor-not-allowed"
               value={formData.baseValue}
               onChange={(e) => {
                 setFormData((prevState) => {
@@ -237,7 +280,8 @@ function CreateNewGoal(props) {
             <input
               type="text"
               placeholder="Enter the target value"
-              className="w-[350px] px-4 py-6 text-white border-white rounded-none text-md bg-gGray input input-bordered"
+              disabled={!editMode}
+              className="w-[350px] px-4 py-6 text-white border-white rounded-none text-md bg-gGray input input-bordered disabled:text-white disabled:bg-white/10 disabled:cursor-not-allowed"
               value={formData.targetValue}
               onChange={(e) => {
                 setFormData((prevState) => {
@@ -260,7 +304,8 @@ function CreateNewGoal(props) {
             <input
               type="text"
               placeholder="Enter the deadline date"
-              className="w-[350px] px-4 py-6 text-white border-white rounded-none text-md bg-gGray input input-bordered"
+              disabled={!editMode}
+              className="w-[350px] px-4 py-6 text-white border-white rounded-none text-md bg-gGray input input-bordered disabled:text-white disabled:bg-white/10 disabled:cursor-not-allowed"
               value={formData.deadlineDate}
               onChange={(e) => {
                 setFormData((prevState) => {
@@ -332,7 +377,8 @@ function CreateNewGoal(props) {
             <textarea
               type="text"
               placeholder="Enter any comments about the goal (optional)"
-              className="w-[550px] h-[160px] px-4 py-6 text-white border-white rounded-none text-md bg-gGray input input-bordered"
+              disabled={!editMode}
+              className="w-[550px] h-[160px] px-4 py-6 text-white border-white rounded-none text-md bg-gGray input input-bordered disabled:text-white disabled:bg-white/10 disabled:cursor-not-allowed"
               value={formData.comments}
               onChange={(e) => {
                 setFormData((prevState) => {
@@ -350,4 +396,4 @@ function CreateNewGoal(props) {
   );
 }
 
-export default CreateNewGoal;
+export default GoalView;

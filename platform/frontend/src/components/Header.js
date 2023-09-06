@@ -17,7 +17,9 @@ function Header(props) {
   const navigate = useNavigate();
   return (
     <>
-      {location.pathname !== "/signin" && location.pathname !== "/signup" ? (
+      {location.pathname !== "/signin" &&
+      location.pathname !== "/signup" &&
+      auth.currentUser !== null ? (
         <>
           <div className="flex flex-row items-center justify-between w-full px-4 py-2 pt-6">
             {/* left container */}

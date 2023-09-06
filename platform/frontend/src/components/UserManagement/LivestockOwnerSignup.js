@@ -1,17 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { toast } from "react-hot-toast";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { auth, db } from "../../services/firebase.config";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../../AppContext";
 
 import addGreen from "../../assets/svg/add-green.svg";
 import backbutton from "../../assets/svg/left-arrow.svg";
 import removeGreen from "../../assets/svg/remove-green.svg";
 
 function LivestockSignup(props) {
+  const {
+    appData,
+    setAppData,
+    signupLivestockOwner,
+    initializeWeb3,
+    disconnectWallet,
+  } = useContext(AppContext);
   const navigate = useNavigate();
-  const collectionRef = collection(db, "users");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -22,27 +26,27 @@ function LivestockSignup(props) {
     householdSize: "",
   });
 
-  const [livestockList, setLivestockList] = useState([
-    { name: "", population: "" },
-  ]);
+  // const [livestockList, setLivestockList] = useState([
+  //   { name: "", population: "" },
+  // ]);
 
-  const handleLivestockChange = (index, field, value) => {
-    const updatedList = [...livestockList];
-    updatedList[index][field] = value;
-    setLivestockList(updatedList);
-  };
+  // const handleLivestockChange = (index, field, value) => {
+  //   const updatedList = [...livestockList];
+  //   updatedList[index][field] = value;
+  //   setLivestockList(updatedList);
+  // };
 
-  const addLivestockBlock = () => {
-    setLivestockList([...livestockList, { name: "", population: "" }]);
-  };
+  // const addLivestockBlock = () => {
+  //   setLivestockList([...livestockList, { name: "", population: "" }]);
+  // };
 
-  const removeLivestockBlock = (index) => {
-    const updatedList = [...livestockList];
-    updatedList.splice(index, 1);
-    setLivestockList(updatedList);
-  };
+  // const removeLivestockBlock = (index) => {
+  //   const updatedList = [...livestockList];
+  //   updatedList.splice(index, 1);
+  //   setLivestockList(updatedList);
+  // };
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = async () => {
     const validations = [
       [formData.name, "Please enter your name"],
       [formData.email, "Please enter your email"],
@@ -56,61 +60,27 @@ function LivestockSignup(props) {
       [formData.age, "Please enter your age"],
       [formData.income, "Please enter your income"],
       [formData.householdSize, "Please enter your household size"],
-      [livestockList.length !== 0, "Please enter your livestock details [1]"],
+
+      // [livestockList.length !== 0, "Please enter your livestock details [1]"],
     ];
 
-    for (const [field, errorMessage] of validations) {
-      if (!field) {
-        toast.error(errorMessage);
-        console.log("error", livestockList.length);
-        return;
-      }
-    }
+    // for (const [field, errorMessage] of validations) {
+    //   if (!field) {
+    //     toast.error(errorMessage);
+    //     console.log("error", livestockList.length);
+    //     return;
+    //   }
+    // }
 
-    for (const livestock of livestockList) {
-      if (!livestock.name || !livestock.population) {
-        toast.error("Please enter livestock details [2]");
-        return;
-      }
-    }
+    // for (const livestock of livestockList) {
+    //   if (!livestock.name || !livestock.population) {
+    //     toast.error("Please enter livestock details [2]");
+    //     return;
+    //   }
+    // }
 
-    console.log("form data", formData, livestockList);
-
-    createUserWithEmailAndPassword(auth, formData.email, formData.password)
-      .then(async (userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log("user", user);
-
-        await addDoc(collectionRef, {
-          userUid: user.uid,
-          name: formData.name,
-          email: formData.email,
-          age: formData.age,
-          income: formData.income,
-          householdSize: formData.householdSize,
-          livestock: livestockList,
-          role: "livestockOwner",
-          createdAt: serverTimestamp(),
-          farm: {},
-          animals: [],
-          livestockGoals: [],
-        })
-          .then((docRef) => {
-            console.log("Document written with ID: ", docRef.id);
-          })
-          .catch((error) => {
-            toast.error("Error adding document: ", error);
-          });
-
-        toast.success("Signup Successful");
-        navigate("/signin");
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        toast.error(errorMessage);
-      });
+    const signupResult = await signupLivestockOwner(formData);
+    console.log("signupResult", signupResult);
   };
 
   return (
@@ -231,7 +201,7 @@ function LivestockSignup(props) {
             />
           </div>
           {/* household size */}
-          <div className=" form-control">
+          <div className="col-span-2 form-control">
             <label className="label">
               <span className="font-bold text-white label-text">
                 Household Size
@@ -247,22 +217,47 @@ function LivestockSignup(props) {
               }}
             />
           </div>
+
+          <div className="flex flex-row items-center w-full col-span-2 mt-4 space-x-8">
+            {appData.blockchain.address === "" ||
+            appData.blockchain.address === undefined ? (
+              <button
+                className="px-16 py-2 text-lg text-black capitalize border-0 rounded-full w-fit bg-gGreen btn"
+                onClick={() => initializeWeb3()}
+              >
+                Connect Your Wallet
+              </button>
+            ) : (
+              <button
+                className="px-16 py-2 text-lg text-black capitalize border-0 rounded-full w-fit bg-gGreen btn"
+                onClick={() => disconnectWallet()}
+              >
+                Disconnect Wallet
+              </button>
+            )}
+            <p className="text-white ">
+              {appData.blockchain.address === undefined ||
+              appData.blockchain.address === ""
+                ? "No Wallet Connected"
+                : appData.blockchain.address}
+            </p>
+          </div>
         </div>
 
         {/* livestock input container */}
         {/* livestock details input container */}
         <div className="flex flex-col mt-12">
           {/* title bar */}
-          <p className="text-3xl font-bold text-white">Add Livestock</p>
+          {/* <p className="text-3xl font-bold text-white">Add Livestock</p>
           <p className="text-sm text-white">
             Provide details about the livestock you own
-          </p>
+          </p> */}
 
           {/* livestock input container */}
-          <div className="flex flex-col mt-4 space-y-4">
+          {/* <div className="flex flex-col mt-4 space-y-4">
             {livestockList.map((livestock, index) => (
               <div key={index} className="flex items-center space-x-4">
-                {/* name */}
+                name
                 <input
                   type="text"
                   placeholder="Livestock Name"
@@ -272,7 +267,7 @@ function LivestockSignup(props) {
                     handleLivestockChange(index, "name", e.target.value)
                   }
                 />
-                {/* population */}
+                population
                 <input
                   type="text"
                   placeholder="Population"
@@ -282,7 +277,7 @@ function LivestockSignup(props) {
                     handleLivestockChange(index, "population", e.target.value)
                   }
                 />
-                {/* remove button */}
+                remove button
                 {livestockList.length > 1 ? (
                   <button>
                     <img
@@ -306,13 +301,23 @@ function LivestockSignup(props) {
                 ) : null}
               </div>
             ))}
-          </div>
+          </div>*/}
         </div>
 
         {/* submit button */}
         <button
-          className="px-16 py-2 mt-12 text-lg text-black capitalize border-0 rounded-full w-fit bg-gGreen btn"
-          onClick={() => handleFormSubmit()}
+          className="px-16 py-2 text-lg text-black capitalize border-0 rounded-full w-fit bg-gGreen btn"
+          onClick={() => {
+            if (
+              appData.blockchain.address === "" ||
+              appData.blockchain.address === undefined
+            ) {
+              toast.error("Please connect your wallet");
+              return;
+            } else {
+              handleFormSubmit();
+            }
+          }}
         >
           Sign Up
         </button>

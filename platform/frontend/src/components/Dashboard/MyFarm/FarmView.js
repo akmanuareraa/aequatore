@@ -1,32 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../../../AppContext";
 
 function FarmView(props) {
+  const { appData, setAppData, deleteFarmForUser } = useContext(AppContext);
   const navigate = useNavigate();
   const [tabView, setTabView] = useState("information");
+
+  const deleteFarm = async () => {
+    const deleteStatus = await deleteFarmForUser(appData.userProfile.userUid);
+    if (deleteStatus === true) {
+      navigate("/dashboard/my-farm");
+    }
+  };
   return (
     <div>
       {/* titlebar */}
       <div className="flex flex-row items-center justify-between">
         {/* title */}
-        <p className="text-2xl font-bold text-white">John's Farm</p>
+        <p className="text-2xl font-bold text-white">
+          {" "}
+          {appData.userProfile.name}
+          's Farm
+        </p>
         {/* side button container */}
         <div className="flex flex-row items-center space-x-4">
           <button
             className="px-10 py-3 font-bold text-black capitalize border-4 rounded-full border-gGreen text-md h-fit btn btn-sm bg-gGreen"
-            onClick={() => props.submitForm()}
+            onClick={() => props.setWindowState("editFarm")}
           >
             Edit Farm
           </button>
-          <button
+          {/* <button
             className="px-10 py-3 font-bold text-black capitalize border-4 rounded-full border-gGreen text-md h-fit btn btn-sm bg-gGreen"
             onClick={() => props.submitForm()}
           >
             Zones
-          </button>
+          </button> */}
           <button
             className="px-10 py-3 font-bold capitalize bg-black border-4 rounded-full text-red border-red text-md h-fit btn btn-sm hover:text-black hover:bg-red hover:border-red"
-            onClick={() => props.setWindowState("noFarm")}
+            onClick={() => deleteFarm()}
           >
             Delete Farm
           </button>
@@ -38,42 +51,58 @@ function FarmView(props) {
         {/* farm name */}
         <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
           <p className="text-xs text-white">Farm Name</p>
-          <p className="text-lg font-bold text-white">John's Farm</p>
+          <p className="text-lg font-bold text-white">
+            {appData.userProfile.farm.farmName}
+          </p>
         </div>
 
         {/* <div className="divider divider-horizontal before:bg-white/40 after:bg-white/40"></div> */}
 
         <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
           <p className="text-xs text-white">Farm Owner</p>
-          <p className="text-lg font-bold text-white">John Doe</p>
+          <p className="text-lg font-bold text-white">
+            {appData.userProfile.farm.farmOwner}
+          </p>
         </div>
 
         {/* <div className="divider divider-horizontal before:bg-white/40 after:bg-white/40"></div> */}
 
         <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
           <p className="text-xs text-white">Govt. Registry</p>
-          <p className="text-lg font-bold text-white">1234567</p>
+          <p className="text-lg font-bold text-white">
+            {appData.userProfile.farm.farmOwner}
+          </p>
         </div>
 
         {/* <div className="divider divider-horizontal before:bg-white/40 after:bg-white/40"></div> */}
 
         <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
           <p className="text-xs text-white">Cooperative/Union ID</p>
-          <p className="text-lg font-bold text-white">ABC4589663</p>
+          <p className="text-lg font-bold text-white">
+            {appData.userProfile.farm.unionId}
+          </p>
         </div>
 
         {/* <div className="divider divider-horizontal before:bg-white/40 after:bg-white/40"></div> */}
 
         <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
           <p className="text-xs text-white">Cooperative/Union Name</p>
-          <p className="text-lg font-bold text-white">ABC Cooperative</p>
+          <p className="text-lg font-bold text-white">
+            {appData.userProfile.farm.unionName}
+          </p>
         </div>
 
         {/* <div className="divider divider-horizontal before:bg-white/40 after:bg-white/40"></div> */}
 
         <div className="flex flex-col items-center w-full space-y-1">
           <p className="text-xs text-white">Date of Registration</p>
-          <p className="text-lg font-bold text-white">08-12-2020</p>
+          <p className="text-lg font-bold text-white">
+            {appData.userProfile.farm.createdAt
+              ? new Date(
+                  appData.userProfile.farm.createdAt.seconds * 1000
+                ).toLocaleDateString("en-GB")
+              : "--"}
+          </p>
         </div>
       </div>
 
@@ -122,37 +151,45 @@ function FarmView(props) {
               {/* farm name */}
               <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
                 <p className="text-xs text-white">Farm Owner</p>
-                <p className="text-lg font-bold text-white">John Doe</p>
+                <p className="text-lg font-bold text-white">
+                  {appData.userProfile.farm.farmOwner}
+                </p>
               </div>
 
               {/* <div className="divider divider-horizontal before:bg-white/40 after:bg-white/40"></div> */}
 
               <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
                 <p className="text-xs text-white">Ownership Type</p>
-                <p className="text-lg font-bold text-white">Personal</p>
+                <p className="text-lg font-bold text-white capitalize">
+                  {appData.userProfile.farm.ownershipType}
+                </p>
               </div>
 
               {/* <div className="divider divider-horizontal before:bg-white/40 after:bg-white/40"></div> */}
 
-              <div className="flex flex-col items-center w-full space-y-1">
+              {/* <div className="flex flex-col items-center w-full space-y-1">
                 <p className="text-xs text-white">Farming System</p>
                 <p className="text-lg font-bold text-white">Organic</p>
+              </div> */}
+
+              <div className="flex flex-col items-center w-full space-y-1 border-white/40">
+                <p className="text-xs text-white">Cooperative/Union ID</p>
+                <p className="text-lg font-bold text-white">
+                  {appData.userProfile.farm.unionId}
+                </p>
               </div>
 
               <div className="px-8 divider before:bg-white/40 after:bg-white/40"></div>
               <div className="px-8 divider before:bg-white/40 after:bg-white/40 "></div>
               <div className="px-8 divider before:bg-white/40 after:bg-white/40"></div>
 
-              <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
-                <p className="text-xs text-white">Cooperative/Union ID</p>
-                <p className="text-lg font-bold text-white">ABC4589663</p>
-              </div>
-
               {/* <div className="divider divider-horizontal before:bg-white/40 after:bg-white/40"></div> */}
 
               <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
                 <p className="text-xs text-white">Cooperative/Union Name</p>
-                <p className="text-lg font-bold text-white">ABC Cooperative</p>
+                <p className="text-lg font-bold text-white">
+                  {appData.userProfile.farm.unionName}
+                </p>
               </div>
             </div>
           ) : tabView === "license" ? (
@@ -161,58 +198,63 @@ function FarmView(props) {
               {/* farm name */}
               <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
                 <p className="text-xs text-white">License Number</p>
-                <p className="text-lg font-bold text-white">1234567890</p>
+                <p className="text-lg font-bold text-white">
+                  {appData.userProfile.farm.licenseNumber}
+                </p>
               </div>
 
               {/* <div className="divider divider-horizontal before:bg-white/40 after:bg-white/40"></div> */}
 
               <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
                 <p className="text-xs text-white">License Expiry Date</p>
-                <p className="text-lg font-bold text-white">08-12-2020</p>
+                <p className="text-lg font-bold text-white">
+                  {appData.userProfile.farm.licenseExpiryDate}
+                </p>
               </div>
 
               {/* <div className="divider divider-horizontal before:bg-white/40 after:bg-white/40"></div> */}
 
               <div className="flex flex-col items-center w-full space-y-1">
                 <p className="text-xs text-white">Regulator Name</p>
-                <p className="text-lg font-bold text-white">DAA</p>
-              </div>
-
-              <div className="px-8 divider before:bg-white/40 after:bg-white/40"></div>
-              <div className="px-8 divider before:bg-white/40 after:bg-white/40 "></div>
-              <div className="px-8 divider before:bg-white/40 after:bg-white/40"></div>
-
-              <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
-                <p className="text-xs text-white">
-                  Regualtor Representative Name
+                <p className="text-lg font-bold text-white">
+                  {appData.userProfile.farm.regulatorName}
                 </p>
-                <p className="text-lg font-bold text-white">David Joe</p>
               </div>
+
+              {/* <div className="px-8 divider before:bg-white/40 after:bg-white/40"></div>
+              <div className="px-8 divider before:bg-white/40 after:bg-white/40 "></div>
+              <div className="px-8 divider before:bg-white/40 after:bg-white/40"></div> */}
+
+              {/* <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
+                <p className="text-xs text-white">
+                  Regulator Representative Name
+                </p>
+                <p className="text-lg font-bold text-white">
+                  {appData.userProfile.farm.regulatorRepName}
+                </p>
+              </div> */}
             </div>
           ) : tabView === "location" ? (
+            // location and size
             <div className="grid items-center justify-center grid-cols-3 p-4 py-6 rounded-md gap-y-2 bg-gLightGray/30">
               {/* farm name */}
               <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
                 <p className="text-xs text-white">Farm Address</p>
                 <p className="text-lg font-bold text-center text-white">
-                  123 Main St.
-                  <br />
-                  New York, NY 10030
-                  <br />
-                  United States
+                  {appData.userProfile.farm.farmAddress}
                 </p>
               </div>
 
               {/* <div className="divider divider-horizontal before:bg-white/40 after:bg-white/40"></div> */}
 
-              <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
+              {/* <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
                 <p className="text-xs text-white">Country</p>
                 <p className="text-lg font-bold text-white">United States</p>
-              </div>
+              </div> */}
 
               {/* <div className="divider divider-horizontal before:bg-white/40 after:bg-white/40"></div> */}
 
-              <div className="flex flex-col items-center w-full space-y-1">
+              {/* <div className="flex flex-col items-center w-full space-y-1">
                 <p className="text-xs text-white">Province/State</p>
                 <p className="text-lg font-bold text-white">Manhattan</p>
               </div>
@@ -229,26 +271,30 @@ function FarmView(props) {
               <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
                 <p className="text-xs text-white">Postal/Zip Code</p>
                 <p className="text-lg font-bold text-white">123456</p>
-              </div>
+              </div> */}
 
               <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
                 <p className="text-xs text-white">Farm Number</p>
-                <p className="text-lg font-bold text-white">5231945681</p>
+                <p className="text-lg font-bold text-white">
+                  {appData.userProfile.farm.farmNumber}
+                </p>
               </div>
-
-              <div className="px-8 divider before:bg-white/40 after:bg-white/40"></div>
-              <div className="px-8 divider before:bg-white/40 after:bg-white/40 "></div>
-              <div className="px-8 divider before:bg-white/40 after:bg-white/40"></div>
 
               <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
                 <p className="text-xs text-white">Farm Size</p>
-                <p className="text-lg font-bold text-white">2 Acre</p>
+                <p className="text-lg font-bold text-white">
+                  {appData.userProfile.farm.farmSize}
+                </p>
               </div>
 
-              <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
+              {/* <div className="px-8 divider before:bg-white/40 after:bg-white/40"></div>
+              <div className="px-8 divider before:bg-white/40 after:bg-white/40 "></div>
+              <div className="px-8 divider before:bg-white/40 after:bg-white/40"></div> */}
+
+              {/* <div className="flex flex-col items-center w-full space-y-1 border-r-2 border-white/40">
                 <p className="text-xs text-white">Farm Geofence</p>
                 <p className="text-lg font-bold text-white">Mapped</p>
-              </div>
+              </div> */}
             </div>
           ) : null}
         </div>
@@ -261,7 +307,7 @@ function FarmView(props) {
           <p className="text-2xl font-bold text-white">Farm Animals</p>
           <button
             className="px-10 py-3 font-bold text-black capitalize border-4 rounded-full border-gGreen text-md h-fit btn btn-sm bg-gGreen"
-            onClick={() => {}}
+            onClick={() => navigate("/dashboard/animals/register")}
           >
             Add Animal
           </button>
@@ -273,7 +319,9 @@ function FarmView(props) {
           <div className="flex flex-row items-center justify-center p-8 space-x-8 rounded-md bg-gLightGray/30 w-fit">
             <div className="flex flex-col items-center justify-center">
               <p className="text-white">Male</p>
-              <p className="text-4xl font-bold text-white">20</p>
+              <p className="text-4xl font-bold text-white">
+                {appData.userProfile.livestock.length === 0 ? 0 : "value"}
+              </p>
             </div>
             <button
               className="text-black capitalize bg-white border-0 rounded-sm btn btn-sm"
@@ -287,7 +335,9 @@ function FarmView(props) {
           <div className="flex flex-row items-center justify-center p-8 space-x-8 rounded-md bg-gLightGray/30 w-fit">
             <div className="flex flex-col items-center justify-center">
               <p className="text-white">Female</p>
-              <p className="text-4xl font-bold text-white">20</p>
+              <p className="text-4xl font-bold text-white">
+                {appData.userProfile.livestock.length === 0 ? 0 : "value"}
+              </p>
             </div>
             <button
               className="text-black capitalize bg-white border-0 rounded-sm btn btn-sm"

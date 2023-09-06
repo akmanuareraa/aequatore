@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { AppContext } from "../../../AppContext";
 import {
   collection,
@@ -15,65 +15,84 @@ import { auth, db } from "../../../services/firebase.config";
 import moreInfo from "../../../assets/svg/more-info.svg";
 import { toast } from "react-hot-toast";
 
-function NewFarm(props) {
+function EditFarm(props) {
   const { appData, setAppData, getUserProfileFromId, updateFarmForUser } =
     useContext(AppContext);
   const collectionRef = collection(db, "users");
+  const [formData, setFormData] = useState({});
+
+  const [dropdownState, setDropdownState] = useState({
+    ownershipDropdownOpen: false,
+    farmingSystemDropdownOpen: false,
+  });
+
+  const [tooltipState, setTooltipState] = useState({
+    farmingSystemTooltipHover: false,
+    unionIdTooltipHover: false,
+    regulatorNameTooltipHover: false,
+    farmNumberTooltipHover: false,
+  });
+
+  const handleOwnershipTypeChange = (value) => {
+    setFormData((prevState) => {
+      return {
+        ...prevState,
+        ownershipType: value,
+      };
+    });
+    setDropdownState((prevState) => {
+      return {
+        ...prevState,
+        ownershipDropdownOpen: false,
+      };
+    });
+  };
 
   useEffect(() => {
+    setFormData(appData.userProfile.farm);
     setAppData((prevState) => {
       return {
         ...prevState,
-        currentHeaderTitle: "New Farm",
-        breadCrumbs: [
-          {
-            label: "My Farm",
-            link: "/dashboard/my-farm",
-          },
-          {
-            label: "New Farm",
-            link: "/dashboard/my-farm",
-          },
-        ],
+        currentHeaderTitle: "Edit Farm",
       };
     });
   }, []);
 
   const formValidation = () => {
-    if (props.formData.farmName === "") {
+    if (formData.farmName === "") {
       toast.error("Farm name cannot be empty!");
       return false;
-    } else if (props.formData.farmOwner === "") {
+    } else if (formData.farmOwner === "") {
       toast.error("Farm owner cannot be empty!");
       return false;
-    } else if (props.formData.ownershipType === "") {
+    } else if (formData.ownershipType === "") {
       toast.error("Ownership type cannot be empty!");
       return false;
-    } else if (props.formData.govtRegistrationNumber === "") {
+    } else if (formData.govtRegistrationNumber === "") {
       toast.error("Govt. registration number cannot be empty!");
       return false;
-    } else if (props.formData.unionId === "") {
+    } else if (formData.unionId === "") {
       toast.error("Farm address cannot be empty!");
       return false;
-    } else if (props.formData.unionName === "") {
+    } else if (formData.unionName === "") {
       toast.error("Farm size cannot be empty!");
       return false;
-    } else if (props.formData.licenseNumber === "") {
+    } else if (formData.licenseNumber === "") {
       toast.error("License number cannot be empty!");
       return false;
-    } else if (props.formData.licenseExpiryDate === "") {
+    } else if (formData.licenseExpiryDate === "") {
       toast.error("License expiry date cannot be empty!");
       return false;
-    } else if (props.formData.regulatorName === "") {
+    } else if (formData.regulatorName === "") {
       toast.error("Regulator name cannot be empty!");
       return false;
-    } else if (props.formData.farmAddress === "") {
+    } else if (formData.farmAddress === "") {
       toast.error("Farm address cannot be empty!");
       return false;
-    } else if (props.formData.farmNumber === "") {
+    } else if (formData.farmNumber === "") {
       toast.error("Farm number cannot be empty!");
       return false;
-    } else if (props.formData.farmSize === "") {
+    } else if (formData.farmSize === "") {
       toast.error("Farm size cannot be empty!");
       return false;
     } else {
@@ -82,13 +101,14 @@ function NewFarm(props) {
   };
 
   const submitForm = async () => {
+    console.log("formData", formData);
     try {
       if (!formValidation()) {
         return;
       }
       const updateResult = await updateFarmForUser(
         auth.currentUser.uid,
-        props.formData
+        formData
       );
       if (updateResult === true) {
         const userData = await getUserProfileFromId(auth.currentUser.uid);
@@ -119,11 +139,11 @@ function NewFarm(props) {
             className="px-10 py-3 font-bold text-black capitalize border-4 rounded-full border-gGreen text-md h-fit btn btn-sm bg-gGreen"
             onClick={() => submitForm()}
           >
-            Register
+            Save
           </button>
           <button
             className="px-10 py-3 font-bold text-white capitalize bg-black border-4 border-white rounded-full text-md h-fit btn btn-sm hover:text-black"
-            onClick={() => props.setWindowState("noFarm")}
+            onClick={() => props.setWindowState("farmView")}
           >
             Cancel
           </button>
@@ -161,9 +181,9 @@ function NewFarm(props) {
                 type="text"
                 placeholder="John's Farm "
                 className="w-[350px] text-md text-white border-white rounded-none bg-gGray input input-bordered px-4 py-6"
-                value={props.formData.farmName}
+                value={formData.farmName}
                 onChange={(e) =>
-                  props.setFormData((prevState) => {
+                  setFormData((prevState) => {
                     return {
                       ...prevState,
                       farmName: e.target.value,
@@ -184,9 +204,9 @@ function NewFarm(props) {
                 type="text"
                 placeholder="John Doe"
                 className="w-[350px] text-md text-white border-white rounded-none bg-gGray input input-bordered px-4 py-6"
-                value={props.formData.farmOwner}
+                value={formData.farmOwner}
                 onChange={(e) =>
-                  props.setFormData((prevState) => {
+                  setFormData((prevState) => {
                     return {
                       ...prevState,
                       farmOwner: e.target.value,
@@ -206,10 +226,10 @@ function NewFarm(props) {
               <div className="dropdown">
                 <button
                   className={`dropdown-trigger px-4 py-[17px] text-white capitalize border-white rounded-none border-1 btn bg-gGray h-fit hover:bg-black hover:text-white w-[350px] justify-start ${
-                    props.dropdownState.ownershipDropdownOpen ? "active" : ""
+                    dropdownState.ownershipDropdownOpen ? "active" : ""
                   }`}
                   onClick={() =>
-                    props.setDropdownState((prevState) => {
+                    setDropdownState((prevState) => {
                       return {
                         ...prevState,
                         ownershipDropdownOpen: !prevState.ownershipDropdownOpen,
@@ -217,15 +237,15 @@ function NewFarm(props) {
                     })
                   }
                 >
-                  {props.formData.ownershipType || "Ownership"}
+                  {formData.ownershipType || "Ownership"}
                 </button>
-                {props.dropdownState.ownershipDropdownOpen && (
+                {dropdownState.ownershipDropdownOpen && (
                   <ul className="my-2 text-white shadow menu dropdown-content z-[1] bg-gGray border-[1px] border-white p-0 w-[350px]">
                     <li>
                       <button
                         className="w-full px-4 py-4 text-left rounded-none hover:text-white hover:bg-white/20 hover:m-0"
                         onClick={() =>
-                          props.handleOwnershipTypeChange("individual")
+                          handleOwnershipTypeChange("individual")
                         }
                       >
                         Individual
@@ -234,7 +254,7 @@ function NewFarm(props) {
                     <li>
                       <button
                         className="w-full px-4 py-4 text-left rounded-none hover:text-white hover:bg-white/20 hover:m-0"
-                        onClick={() => props.handleOwnershipTypeChange("joint")}
+                        onClick={() => handleOwnershipTypeChange("joint")}
                       >
                         Joint
                       </button>
@@ -255,9 +275,9 @@ function NewFarm(props) {
                 type="text"
                 placeholder="1A34GH8556HOP "
                 className="w-[350px] text-md text-white border-white rounded-none bg-gGray input input-bordered px-4 py-6"
-                value={props.formData.govtRegistrationNumber}
+                value={formData.govtRegistrationNumber}
                 onChange={(e) =>
-                  props.setFormData((prevState) => {
+                  setFormData((prevState) => {
                     return {
                       ...prevState,
                       govtRegistrationNumber: e.target.value,
@@ -275,13 +295,13 @@ function NewFarm(props) {
                 </span>
                 <div
                   className={`tooltip ${
-                    props.tooltipState.farmingSystemTooltipHover === true
+                    tooltipState.farmingSystemTooltipHover === true
                       ? "tooltip-open"
                       : ""
                   } tooltip-right`}
                   data-tip="Types of farming system should be chosen depending upon the geographical and local climatic conditions with keeping economics in mind. E.g. Loose Farming, Conventional barn system and free range system."
                   onMouseEnter={() => {
-                    props.setTooltipState((prevState) => {
+                    setTooltipState((prevState) => {
                       return {
                         ...prevState,
                         farmingSystemTooltipHover: true,
@@ -289,7 +309,7 @@ function NewFarm(props) {
                     });
                   }}
                   onMouseLeave={() => {
-                    props.setTooltipState((prevState) => {
+                    setTooltipState((prevState) => {
                       return {
                         ...prevState,
                         farmingSystemTooltipHover: false,
@@ -307,12 +327,12 @@ function NewFarm(props) {
               <div className="dropdown">
                 <button
                   className={`dropdown-trigger px-4 py-[17px] text-white capitalize border-white rounded-none border-1 btn bg-gGray h-fit hover:bg-black hover:text-white w-[350px] justify-start ${
-                    props.dropdownState.farmingSystemDropdownOpen
+                    dropdownState.farmingSystemDropdownOpen
                       ? "active"
                       : ""
                   }`}
                   onClick={() =>
-                    props.setDropdownState((prevState) => {
+                    setDropdownState((prevState) => {
                       return {
                         ...prevState,
                         farmingSystemDropdownOpen:
@@ -321,18 +341,18 @@ function NewFarm(props) {
                     })
                   }
                 >
-                  {props.formData.farmingSystem.length === 0
+                  {formData.farmingSystem.length === 0
                     ? "Choose from below"
-                    : props.formData.farmingSystem.join(", ")}
+                    : formData.farmingSystem.join(", ")}
                 </button>
-                {props.dropdownState.farmingSystemDropdownOpen && (
+                {dropdownState.farmingSystemDropdownOpen && (
                   <ul className="my-2 text-white shadow menu dropdown-content z-[1] bg-gGray border-[1px] border-white p-0 w-[350px]">
                     <li>
                       <div className="flex flex-row items-center rounded-none hover:text-white hover:bg-white/20 hover:m-0">
                         <input
                           type="checkbox"
                           checked={
-                            props.formData.farmingSystem.includes("Zero-Gazing")
+                            formData.farmingSystem.includes("Zero-Gazing")
                               ? "checked"
                               : false
                           }
@@ -352,7 +372,7 @@ function NewFarm(props) {
                         <input
                           type="checkbox"
                           checked={
-                            props.formData.farmingSystem.includes(
+                            formData.farmingSystem.includes(
                               "Fenced Farming"
                             )
                               ? "checked"
@@ -374,7 +394,7 @@ function NewFarm(props) {
                         <input
                           type="checkbox"
                           checked={
-                            props.formData.farmingSystem.includes(
+                            formData.farmingSystem.includes(
                               "Enclosed Ranching"
                             )
                               ? "checked"
@@ -396,7 +416,7 @@ function NewFarm(props) {
                         <input
                           type="checkbox"
                           checked={
-                            props.formData.farmingSystem.includes(
+                            formData.farmingSystem.includes(
                               "Semi Intensive System"
                             )
                               ? "checked"
@@ -420,7 +440,7 @@ function NewFarm(props) {
                         <input
                           type="checkbox"
                           checked={
-                            props.formData.farmingSystem.includes(
+                            formData.farmingSystem.includes(
                               "Extensive System"
                             )
                               ? "checked"
@@ -442,7 +462,7 @@ function NewFarm(props) {
                         <input
                           type="checkbox"
                           checked={
-                            props.formData.farmingSystem.includes(
+                            formData.farmingSystem.includes(
                               "Intensive (Zero-Gazing)"
                             )
                               ? "checked"
@@ -473,13 +493,13 @@ function NewFarm(props) {
                 </span>
                 <div
                   className={`tooltip ${
-                    props.tooltipState.unionIdTooltipHover === true
+                    tooltipState.unionIdTooltipHover === true
                       ? "tooltip-open"
                       : ""
                   } tooltip-right`}
                   data-tip="This field only applies to you if you belong to any cooperative (A cooperative is an autonomous association of persons united voluntarily to meet their common economic, social and cultural needs and aspirations through a jointly-owned and democratically-controlled enterprise). IF you belong to a cooperative, please indicate the unique identifier of that cooperative, it can be a registration or license number uniquely identifying the cooperative you associate with."
                   onMouseEnter={() => {
-                    props.setTooltipState((prevState) => {
+                    setTooltipState((prevState) => {
                       return {
                         ...prevState,
                         unionIdTooltipHover: true,
@@ -487,7 +507,7 @@ function NewFarm(props) {
                     });
                   }}
                   onMouseLeave={() => {
-                    props.setTooltipState((prevState) => {
+                    setTooltipState((prevState) => {
                       return {
                         ...prevState,
                         unionIdTooltipHover: false,
@@ -506,9 +526,9 @@ function NewFarm(props) {
                 type="text"
                 placeholder="1A34GH8556HOP"
                 className="w-[350px] text-md text-white border-white rounded-none bg-gGray input input-bordered px-4 py-6"
-                value={props.formData.unionId}
+                value={formData.unionId}
                 onChange={(e) =>
-                  props.setFormData((prevState) => {
+                  setFormData((prevState) => {
                     return {
                       ...prevState,
                       unionId: e.target.value,
@@ -529,9 +549,9 @@ function NewFarm(props) {
                 type="text"
                 placeholder="ABC Cooperative"
                 className="w-[350px] text-md text-white border-white rounded-none bg-gGray input input-bordered px-4 py-6"
-                value={props.formData.unionName}
+                value={formData.unionName}
                 onChange={(e) =>
-                  props.setFormData((prevState) => {
+                  setFormData((prevState) => {
                     return {
                       ...prevState,
                       unionName: e.target.value,
@@ -567,9 +587,9 @@ function NewFarm(props) {
                 type="text"
                 placeholder="John's Farm "
                 className="w-[350px] text-md text-white border-white rounded-none bg-gGray input input-bordered px-4 py-6"
-                value={props.formData.licenseNumber}
+                value={formData.licenseNumber}
                 onChange={(e) =>
-                  props.setFormData((prevState) => {
+                  setFormData((prevState) => {
                     return {
                       ...prevState,
                       licenseNumber: e.target.value,
@@ -590,9 +610,9 @@ function NewFarm(props) {
                 type="text"
                 placeholder="John Doe"
                 className="w-[350px] text-md text-white border-white rounded-none bg-gGray input input-bordered px-4 py-6"
-                value={props.formData.licenseExpiryDate}
+                value={formData.licenseExpiryDate}
                 onChange={(e) =>
-                  props.setFormData((prevState) => {
+                  setFormData((prevState) => {
                     return {
                       ...prevState,
                       licenseExpiryDate: e.target.value,
@@ -610,13 +630,13 @@ function NewFarm(props) {
                 </span>
                 <div
                   className={`tooltip ${
-                    props.tooltipState.regulatorNameTooltipHover === true
+                    tooltipState.regulatorNameTooltipHover === true
                       ? "tooltip-open"
                       : ""
                   } tooltip-right`}
                   data-tip="The name of the regulator who released the license."
                   onMouseEnter={() => {
-                    props.setTooltipState((prevState) => {
+                    setTooltipState((prevState) => {
                       return {
                         ...prevState,
                         regulatorNameTooltipHover: true,
@@ -624,7 +644,7 @@ function NewFarm(props) {
                     });
                   }}
                   onMouseLeave={() => {
-                    props.setTooltipState((prevState) => {
+                    setTooltipState((prevState) => {
                       return {
                         ...prevState,
                         regulatorNameTooltipHover: false,
@@ -643,9 +663,9 @@ function NewFarm(props) {
                 type="text"
                 placeholder="Regualtor Name"
                 className="w-[350px] text-md text-white border-white rounded-none bg-gGray input input-bordered px-4 py-6"
-                value={props.formData.regulatorName}
+                value={formData.regulatorName}
                 onChange={(e) =>
-                  props.setFormData((prevState) => {
+                  setFormData((prevState) => {
                     return {
                       ...prevState,
                       regulatorName: e.target.value,
@@ -681,9 +701,9 @@ function NewFarm(props) {
                 type="text"
                 placeholder="Global Address"
                 className="w-[350px] text-md text-white border-white rounded-none bg-gGray input input-bordered px-4 py-6"
-                value={props.formData.farmAddress}
+                value={formData.farmAddress}
                 onChange={(e) =>
-                  props.setFormData((prevState) => {
+                  setFormData((prevState) => {
                     return {
                       ...prevState,
                       farmAddress: e.target.value,
@@ -701,13 +721,13 @@ function NewFarm(props) {
                 </span>
                 <div
                   className={`tooltip ${
-                    props.tooltipState.farmNumberTooltipHover === true
+                    tooltipState.farmNumberTooltipHover === true
                       ? "tooltip-open"
                       : ""
                   } tooltip-right`}
                   data-tip="The postal Number of farm similar to House number.                    "
                   onMouseEnter={() => {
-                    props.setTooltipState((prevState) => {
+                    setTooltipState((prevState) => {
                       return {
                         ...prevState,
                         farmNumberTooltipHover: true,
@@ -715,7 +735,7 @@ function NewFarm(props) {
                     });
                   }}
                   onMouseLeave={() => {
-                    props.setTooltipState((prevState) => {
+                    setTooltipState((prevState) => {
                       return {
                         ...prevState,
                         farmNumberTooltipHover: false,
@@ -734,9 +754,9 @@ function NewFarm(props) {
                 type="text"
                 placeholder="Farm Number"
                 className="w-[350px] text-md text-white border-white rounded-none bg-gGray input input-bordered px-4 py-6"
-                value={props.formData.farmNumber}
+                value={formData.farmNumber}
                 onChange={(e) =>
-                  props.setFormData((prevState) => {
+                  setFormData((prevState) => {
                     return {
                       ...prevState,
                       farmNumber: e.target.value,
@@ -757,9 +777,9 @@ function NewFarm(props) {
                 type="text"
                 placeholder="2 Acre / 2 Hectare"
                 className="w-[350px] text-md text-white border-white rounded-none bg-gGray input input-bordered px-4 py-6"
-                value={props.formData.farmSize}
+                value={formData.farmSize}
                 onChange={(e) =>
-                  props.setFormData((prevState) => {
+                  setFormData((prevState) => {
                     return {
                       ...prevState,
                       farmSize: e.target.value,
@@ -775,4 +795,4 @@ function NewFarm(props) {
   );
 }
 
-export default NewFarm;
+export default EditFarm;

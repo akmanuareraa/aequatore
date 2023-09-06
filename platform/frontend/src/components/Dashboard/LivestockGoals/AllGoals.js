@@ -1,6 +1,51 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AppContext } from "../../../AppContext";
 
 function AllGoals(props) {
+  const { appData, setAppData } = useContext(AppContext);
+  const navigate = useNavigate();
+  const [goalCards, setGoalCards] = useState([]);
+
+  const renderGoalCards = () => {
+    let tempArr = [];
+    setGoalCards(tempArr);
+    appData.userProfile.livestockGoals.forEach((goal, index) => {
+      let element = (
+        <tr className="" key={index}>
+          <td className="text-white">{goal.id}</td>
+          <td className="text-white">{goal.goalName}</td>
+          <td className="text-white">{goal.goalType}</td>
+          <td className="text-white">{goal.deadlineDate}</td>
+          <td>
+            <button
+              className="text-black capitalize border-0 btn btn-xs bg-gGreen"
+              onClick={() => {
+                setAppData((prevState) => {
+                  return {
+                    ...prevState,
+                    livestockGoalInView: goal,
+                  };
+                });
+                navigate("/dashboard/livestock-goals/view");
+              }}
+            >
+              View
+            </button>
+          </td>
+        </tr>
+      );
+      tempArr.push(element);
+      setGoalCards(tempArr);
+    });
+  };
+
+  useEffect(() => {
+    if (appData.userProfile.livestockGoals.length > 0) {
+      renderGoalCards();
+    }
+  }, [appData.userProfile]);
+
   return (
     <div className="w-full h-full px-4 overflow-x-hidden overflow-y-scroll bg-black">
       <div>
@@ -21,31 +66,21 @@ function AllGoals(props) {
           <table className="table">
             <thead>
               <tr>
-                <th className="text-white">ID</th>
-                <th className="text-white">Name</th>
-                <th className="text-white">Type</th>
+                <th className="text-white">Id</th>
+                <th className="text-white">Goal Name</th>
+                <th className="text-white">Goal Type</th>
                 <th className="text-white">Deadline</th>
-                <th className="text-white">Animal ID</th>
-                <th className="text-white">Animal Name</th>
                 <th className="text-white"></th>
               </tr>
             </thead>
             <tbody>
-              <tr className="">
-                <td className="text-white">1</td>
-                <td className="text-white">Goal 1</td>
-                <td className="text-white">Weight</td>
-                <td className="text-white">2021-01-01</td>
-                <td className="text-white">1</td>
-                <td className="text-white">AF8556</td>
-                <td>
-                  <button className="text-black capitalize border-0 btn btn-xs bg-gGreen"
-                    // onClick={() => navigate("/dashboard/livestock-goals/view/")}
-                  >
-                    View
-                  </button>
-                </td>
-              </tr>
+              {goalCards.length > 0 ? (
+                goalCards
+              ) : (
+                <tr>
+                  <td className="text-white">No Goals Created</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

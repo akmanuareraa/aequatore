@@ -1,17 +1,14 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { auth, db } from "../../services/firebase.config";
 import { AppContext } from "../../AppContext";
 
 import HeaderLite from "../../components/HeaderLite";
 import { toast } from "react-hot-toast";
 
 function Signin(props) {
-  const { appData, setAppData } = useContext(AppContext);
+  const { appData, setAppData, signInUser, disconnectWallet, initializeWeb3 } =
+    useContext(AppContext);
   const navigate = useNavigate();
-  const collectionRef = collection(db, "users");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState(false);
@@ -22,55 +19,8 @@ function Signin(props) {
       return;
     }
     try {
-      signInWithEmailAndPassword(auth, email, password)
-        .then(async (userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          console.log(user, user.uid);
-
-          const userDataQuery = query(
-            collectionRef,
-            where("userUid", "==", user.uid)
-          );
-          const userDataSnapshot = await getDocs(userDataQuery);
-
-          if (!userDataSnapshot.empty) {
-            userDataSnapshot.forEach((doc) => {
-              const userData = doc.data();
-              console.log("userData:", userData);
-              if (userData.role === "livestockOwner") {
-                toast.success("Signed in successfully");
-                setAppData((prevSate) => {
-                  return {
-                    ...prevSate,
-                    userProfile: userData,
-                  };
-                });
-                navigate("/dashboard/my-farm");
-              } else if (userData.role === "banker") {
-                setOtp(true);
-                toast.success("Moving to OTP stage");
-                // toast.success("Signed in successfully");
-                // setAppData((prevSate) => {
-                //   return {
-                //     ...prevSate,
-                //     userProfile: {
-                //       generalInfo: userData,
-                //     },
-                //   };
-                // });
-              }
-            });
-          } else {
-            console.log("No matching documents found for the user.");
-          }
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          toast.error("Incorrect Credentials");
-          console.log(errorMessage);
-        });
+      const signInResult = await signInUser(email, password);
+      console.log("signInResult:", signInResult);
     } catch (error) {
       console.log(error);
     }
@@ -137,10 +87,43 @@ function Signin(props) {
             ) : null
           }
 
+          <p className="text-white">
+            {appData.blockchain.address === ""
+              ? "Wallet not connected"
+              : appData.blockchain.address}
+          </p>
+
           {/* submit button */}
+          {appData.blockchain.address === "" ? (
+            <button
+              className="w-full py-2 text-lg text-black capitalize border-0 rounded-full bg-gGreen btn"
+              onClick={() => {
+                initializeWeb3();
+              }}
+            >
+              Connect Wallet
+            </button>
+          ) : (
+            <button
+              className="w-full py-2 text-lg text-black capitalize border-0 rounded-full bg-gGreen btn"
+              onClick={() => {
+                disconnectWallet();
+              }}
+            >
+              Disconnect Wallet
+            </button>
+          )}
+
           <button
             className="w-full py-2 text-lg text-black capitalize border-0 rounded-full bg-gGreen btn"
-            onClick={handleFormSubmit}
+            onClick={() => {
+              if (appData.blockchain.address === "") {
+                toast.error("Please connect wallet first");
+                return;
+              } else {
+                handleFormSubmit();
+              }
+            }}
           >
             Sign In
           </button>

@@ -93,7 +93,9 @@ function Navbar(props) {
                 <li>
                   <div
                     className={
-                      location.pathname === "/dashboard/animals"
+                      location.pathname === "/dashboard/animals" ||
+                      location.pathname === "/dashboard/animals/register" ||
+                      location.pathname === "/dashboard/animals/view"
                         ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
                         : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
                     }
@@ -101,7 +103,9 @@ function Navbar(props) {
                   >
                     <img
                       src={
-                        location.pathname === "/dashboard/animals"
+                        location.pathname === "/dashboard/animals" ||
+                        location.pathname === "/dashboard/animals/register" ||
+                        location.pathname === "/dashboard/animals/view"
                           ? animalsB
                           : animalsW
                       }

@@ -2,30 +2,16 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../AppContext";
 
-import NoAnimal from "../../components/Dashboard/Animals/NoAnimal";
-import AllAnimalView from "../../components/Dashboard/Animals/AllAnimalView";
-import RegisterAnimal from "../../components/Dashboard/Animals/RegisterAnimal";
-
-function Animals(props) {
+function BankerDashboard(props) {
   const { appData, setAppData } = useContext(AppContext);
   const navigate = useNavigate();
-  const [tabView, setTabView] = useState("all");
-
-  useEffect(() => {
-    if (appData.userProfile.animals.length === 0) {
-      setTabView("no");
-    } else {
-      setTabView("all");
-    }
-  }, [appData.userProfile]);
-
   return (
     <div className="w-full h-full px-4 overflow-x-hidden overflow-y-scroll bg-black">
       <div>
         {/* titlebar */}
         <div className="flex flex-row items-center justify-between">
           {/* title */}
-          <p className="text-2xl font-bold text-white">Animals</p>
+          <p className="text-2xl font-bold text-white">Livestock Owners</p>
           {/* side button container */}
           <div className="flex flex-row items-center space-x-4">
             {/* <button
@@ -42,18 +28,9 @@ function Animals(props) {
             </button>
           </div>
         </div>
-        {tabView === "all" ? (
-          <AllAnimalView />
-        ) : tabView === "register" ? (
-          <RegisterAnimal />
-        ) : tabView === "no" ? (
-          <NoAnimal />
-        ) : (
-          <></>
-        )}
       </div>
     </div>
   );
 }
 
-export default Animals;
+export default BankerDashboard;

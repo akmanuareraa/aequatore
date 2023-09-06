@@ -6,15 +6,16 @@ import moreInfo from "../../assets/svg/more-info.svg";
 import NoFarm from "../../components/Dashboard/MyFarm/NoFarm";
 import NewFarm from "../../components/Dashboard/MyFarm/NewFarm";
 import FarmView from "../../components/Dashboard/MyFarm/FarmView";
+import EditFarm from "../../components/Dashboard/MyFarm/EditFarm";
 
 function MyFarm(props) {
   const { appData, setAppData } = useContext(AppContext);
-  const [windowState, setWindowState] = useState("");
+  const [windowState, setWindowState] = useState("farmView");
   const [formData, setFormData] = useState({
     farmName: "",
     farmOwner: "",
     ownershipType: "",
-    govtRegNumber: "",
+    governmentRegistrationNumber: "",
     farmingSystem: [],
     unionId: "",
     unionName: "",
@@ -25,10 +26,12 @@ function MyFarm(props) {
     farmNumber: "",
     farmSize: "",
   });
+
   const [dropdownState, setDropdownState] = useState({
     ownershipDropdownOpen: false,
     farmingSystemDropdownOpen: false,
   });
+
   const [tooltipState, setTooltipState] = useState({
     farmingSystemTooltipHover: false,
     unionIdTooltipHover: false,
@@ -72,10 +75,6 @@ function MyFarm(props) {
     });
   };
 
-  const submitForm = () => {
-    console.log(formData);
-  };
-
   useEffect(() => {
     console.log("appData", appData);
     if (Object.keys(appData.userProfile.farm).length > 0) {
@@ -95,7 +94,7 @@ function MyFarm(props) {
         ],
       };
     });
-  }, []);
+  }, [appData.userProfile]);
 
   return (
     <div className="w-full h-full px-4 overflow-x-hidden overflow-y-scroll bg-black">
@@ -109,13 +108,14 @@ function MyFarm(props) {
           setTooltipState={setTooltipState}
           handleOwnershipTypeChange={handleOwnershipTypeChange}
           handleFarmingSystemChange={handleFarmingSystemChange}
-          submitForm={submitForm}
           setWindowState={setWindowState}
         />
       ) : windowState === "noFarm" ? (
         <NoFarm setWindowState={setWindowState} />
       ) : windowState === "farmView" ? (
-        <FarmView />
+        <FarmView setWindowState={setWindowState} />
+      ) : windowState === "editFarm" ? (
+        <EditFarm setWindowState={setWindowState} />
       ) : null}
     </div>
   );

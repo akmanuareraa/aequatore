@@ -24,6 +24,9 @@ import Signup from "./pages/UserManagement/Signup";
 import RegisterAnimal from "./components/Dashboard/Animals/RegisterAnimal";
 import CreateNewGoal from "./components/Dashboard/LivestockGoals/CreateNewGoal";
 import PrivateRouteGuard from "./PrivateRouteGuard";
+import AnimalView from "./components/Dashboard/Animals/AnimalView";
+import GoalView from "./components/Dashboard/LivestockGoals/GoalView";
+import BankerDashboard from "./pages/Banker/BankerDashboard";
 
 function App() {
   const location = useLocation();
@@ -55,10 +58,26 @@ function App() {
           }
         />
         <Route
+          path="/dashboard/livestock-goals/view"
+          element={
+            <PrivateRouteGuard>
+              <GoalView />
+            </PrivateRouteGuard>
+          }
+        />
+        <Route
           path="/dashboard/animals"
           element={
             <PrivateRouteGuard>
               <Animals />
+            </PrivateRouteGuard>
+          }
+        />
+        <Route
+          path="/dashboard/animals/view"
+          element={
+            <PrivateRouteGuard>
+              <AnimalView />
             </PrivateRouteGuard>
           }
         />
@@ -147,6 +166,14 @@ function App() {
           element={
             <PrivateRouteGuard>
               <CreateNewGoal />
+            </PrivateRouteGuard>
+          }
+        />
+        <Route
+          path="/dashboard/banker"
+          element={
+            <PrivateRouteGuard>
+              <BankerDashboard />
             </PrivateRouteGuard>
           }
         />
