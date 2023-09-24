@@ -27,6 +27,7 @@ import PrivateRouteGuard from "./PrivateRouteGuard";
 import AnimalView from "./components/Dashboard/Animals/AnimalView";
 import GoalView from "./components/Dashboard/LivestockGoals/GoalView";
 import BankerDashboard from "./pages/Banker/BankerDashboard";
+import LivesotckOwnerView from "./pages/Banker/LivesotckOwnerView";
 
 function App() {
   const location = useLocation();
@@ -174,6 +175,14 @@ function App() {
           element={
             <PrivateRouteGuard>
               <BankerDashboard />
+            </PrivateRouteGuard>
+          }
+        />
+        <Route
+          path="/dashboard/livestockOwner/view"
+          element={
+            <PrivateRouteGuard>
+              <LivesotckOwnerView />
             </PrivateRouteGuard>
           }
         />

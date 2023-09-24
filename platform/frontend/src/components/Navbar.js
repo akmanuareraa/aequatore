@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { AppContext } from "./../AppContext";
 
 import symbol from "../assets/svg/logo-symbol-w-c.svg";
 import name from "../assets/svg/logo-name-w-c.svg";
@@ -31,6 +32,7 @@ import lineB from "../assets/svg/line-b.svg";
 function Navbar(props) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { appData, setAppData } = useContext(AppContext);
   const [feedManagementDropdown, setFeedManagementDropdown] = useState(false);
   const [inventoryDropdown, setInventoryDropdown] = useState(false);
   const [reportsDropdown, setReportsDropdown] = useState(false);
@@ -66,433 +68,112 @@ function Navbar(props) {
 
               {/* main menu options */}
               <ul className="space-y-2 font-medium">
-                {/* my farm */}
-                <li>
-                  <div
-                    className={
-                      location.pathname === "/dashboard/my-farm"
-                        ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
-                        : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
-                    }
-                    onClick={() => navigate("/dashboard/my-farm")}
-                  >
-                    <img
-                      src={
-                        location.pathname === "/dashboard/my-farm"
-                          ? farmB
-                          : farmW
-                      }
-                      className="w-5 h-5"
-                      alt="farm icon"
-                    />
-                    <span className="ml-3">My Farm</span>
-                  </div>
-                </li>
-
-                {/* animals */}
-                <li>
-                  <div
-                    className={
-                      location.pathname === "/dashboard/animals" ||
-                      location.pathname === "/dashboard/animals/register" ||
-                      location.pathname === "/dashboard/animals/view"
-                        ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
-                        : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
-                    }
-                    onClick={() => navigate("/dashboard/animals")}
-                  >
-                    <img
-                      src={
-                        location.pathname === "/dashboard/animals" ||
-                        location.pathname === "/dashboard/animals/register" ||
-                        location.pathname === "/dashboard/animals/view"
-                          ? animalsB
-                          : animalsW
-                      }
-                      className="w-5 h-5"
-                      alt="farm icon"
-                    />
-                    <span className="ml-3">Animals</span>
-                  </div>
-                </li>
-
-                {/* livestock goals */}
-                <li>
-                  <div
-                    className={
-                      location.pathname === "/dashboard/livestock-goals"
-                        ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer group bg-gGreen"
-                        : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
-                    }
-                    onClick={() => navigate("/dashboard/livestock-goals")}
-                  >
-                    <img
-                      src={
-                        location.pathname === "/dashboard/livestock-goals"
-                          ? goalsB
-                          : goalsW
-                      }
-                      className="w-5 h-5"
-                      alt="farm icon"
-                    />
-                    <span className="ml-3">Livestock Goals</span>
-                  </div>
-                </li>
-
-                {/* my schedule */}
-                {/* <li>
-                <div
-                  className={
-                    location.pathname === "/dashboard/my-schedule"
-                      ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
-                      : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
-                  }
-                  onClick={() => navigate("/dashboard/my-schedule")}
-                >
-                  <img
-                    src={
-                      location.pathname === "/dashboard/my-schedule"
-                        ? scheduleB
-                        : scheduleW
-                    }
-                    className="w-5 h-5"
-                    alt="farm icon"
-                  />
-                  <span className="ml-3">My Schedule</span>
-                </div>
-              </li> */}
-
-                {/* pasture management */}
-                {/* <li>
-                <div
-                  className={
-                    location.pathname === "/dashboard/pasture-management"
-                      ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
-                      : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
-                  }
-                  onClick={() => navigate("/dashboard/pasture-management")}
-                >
-                  <img
-                    src={
-                      location.pathname === "/dashboard/pasture-management"
-                        ? pastureManagementB
-                        : pastureManagementW
-                    }
-                    className="w-5 h-5"
-                    alt="farm icon"
-                  />
-                  <span className="ml-3">Pasture Management</span>
-                </div>
-              </li> */}
-
-                {/* inventory */}
-                {/* <li>
-                <div
-                  className={
-                    inventoryDropdown
-                      ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer group "
-                      : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
-                  }
-                  aria-controls="dropdown-example"
-                  data-collapse-toggle="dropdown-example"
-                  onClick={() => setInventoryDropdown(!inventoryDropdown)}
-                >
-                  <img
-                    src={inventoryDropdown ? inventoryW : inventoryW}
-                    className="w-5 h-5"
-                    alt="feed management icon"
-                  />
-                  <span className="flex-1 ml-3 text-left whitespace-nowrap">
-                    Inventory
-                  </span>
-                  <svg
-                    className="w-3 h-3"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 10 6"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m1 1 4 4 4-4"
-                    />
-                  </svg>
-                </div>
-                <ul
-                  id="dropdown-example"
-                  className={`${
-                    inventoryDropdown ? "block" : "hidden"
-                  } py-2 space-y-2`}
-                >
-                  <li>
-                    <div
-                      className={
-                        location.pathname === "/dashboard/inventory/equipments"
-                          ? "flex items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer group bg-gGreen ml-8"
-                          : "flex items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group ml-8"
-                      }
-                      onClick={() =>
-                        navigate("/dashboard/inventory/equipments")
-                      }
-                    >
-                      <img
-                        src={
-                          location.pathname ===
-                          "/dashboard/inventory/equipments"
-                            ? lineB
-                            : lineW
+                {appData.userProfile ? (
+                  appData.userProfile.role === "banker" ? (
+                    <li>
+                      {/* banker dashboard */}
+                      <div
+                        className={
+                          location.pathname === "/dashboard/banker" ||
+                          location.pathname === "/dashboard/livestockOwner/view"
+                            ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
+                            : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
                         }
-                        className="w-3 h-5 mr-4"
-                      ></img>
-                      <p>Equipments</p>
-                    </div>
-                  </li>
-                </ul>
-              </li> */}
+                        onClick={() => navigate("/dashboard/banker")}
+                      >
+                        <img
+                          src={
+                            location.pathname === "/dashboard/banker" ||
+                            location.pathname ===
+                              "/dashboard/livestockOwner/view"
+                              ? farmB
+                              : farmW
+                          }
+                          className="w-5 h-5"
+                          alt="farm icon"
+                        />
+                        <span className="ml-3">Dashboard</span>
+                      </div>
+                    </li>
+                  ) : (
+                    <>
+                      {/* my farm */}
+                      <li>
+                        <div
+                          className={
+                            location.pathname === "/dashboard/my-farm"
+                              ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
+                              : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
+                          }
+                          onClick={() => navigate("/dashboard/my-farm")}
+                        >
+                          <img
+                            src={
+                              location.pathname === "/dashboard/my-farm"
+                                ? farmB
+                                : farmW
+                            }
+                            className="w-5 h-5"
+                            alt="farm icon"
+                          />
+                          <span className="ml-3">My Farm</span>
+                        </div>
+                      </li>
 
-                {/* reports */}
-                {/* <li>
-                <div
-                  className={
-                    reportsDropdown
-                      ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg hover:cursor-pointer group text-white"
-                      : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
-                  }
-                  aria-controls="dropdown-example"
-                  data-collapse-toggle="dropdown-example"
-                  onClick={() => setReportsDropdown(!reportsDropdown)}
-                >
-                  <img
-                    src={reportsDropdown ? reportsW : reportsW}
-                    className="w-5 h-5"
-                    alt="feed management icon"
-                  />
-                  <span className="flex-1 ml-3 text-left whitespace-nowrap">
-                    Reports
-                  </span>
-                  <svg
-                    className="w-3 h-3"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 10 6"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m1 1 4 4 4-4"
-                    />
-                  </svg>
-                </div>
-                <ul
-                  id="dropdown-example"
-                  className={`${
-                    reportsDropdown ? "block" : "hidden"
-                  } py-2 space-y-2`}
-                >
-                  <li>
-                    <div
-                      className={
-                        location.pathname ===
-                        "/dashboard/reports/breeder-report"
-                          ? "flex items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen ml-8"
-                          : "flex items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group ml-8"
-                      }
-                      onClick={() =>
-                        navigate("/dashboard/reports/breeder-report")
-                      }
-                    >
-                      <img
-                        src={
-                          location.pathname ===
-                          "/dashboard/reports/breeder-report"
-                            ? lineB
-                            : lineW
-                        }
-                        className="w-3 h-5 mr-4"
-                      ></img>
-                      <p>Breeder Report</p>
-                    </div>
-                  </li>
-                  <li>
-                    <div
-                      className={
-                        location.pathname === "/dashboard/reports/health-report"
-                          ? "flex items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen ml-8"
-                          : "flex items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group ml-8"
-                      }
-                      onClick={() =>
-                        navigate("/dashboard/reports/health-report")
-                      }
-                    >
-                      <img
-                        src={
-                          location.pathname ===
-                          "/dashboard/reports/health-report"
-                            ? lineB
-                            : lineW
-                        }
-                        className="w-3 h-5 mr-4"
-                      ></img>
-                      <p>Health Report</p>
-                    </div>
-                  </li>
-                </ul>
-              </li> */}
+                      {/* animals */}
+                      <li>
+                        <div
+                          className={
+                            location.pathname === "/dashboard/animals" ||
+                            location.pathname ===
+                              "/dashboard/animals/register" ||
+                            location.pathname === "/dashboard/animals/view"
+                              ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen"
+                              : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
+                          }
+                          onClick={() => navigate("/dashboard/animals")}
+                        >
+                          <img
+                            src={
+                              location.pathname === "/dashboard/animals" ||
+                              location.pathname ===
+                                "/dashboard/animals/register" ||
+                              location.pathname === "/dashboard/animals/view"
+                                ? animalsB
+                                : animalsW
+                            }
+                            className="w-5 h-5"
+                            alt="farm icon"
+                          />
+                          <span className="ml-3">Animals</span>
+                        </div>
+                      </li>
 
-                {/* feed management */}
-                {/* <li>
-                <div
-                  className={
-                    feedManagementDropdown
-                      ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg hover:cursor-pointer group text-white"
-                      : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
-                  }
-                  aria-controls="dropdown-example"
-                  data-collapse-toggle="dropdown-example"
-                  onClick={() =>
-                    setFeedManagementDropdown(!feedManagementDropdown)
-                  }
-                >
-                  <img
-                    src={
-                      feedManagementDropdown ? feedManagementW : feedManagementW
-                    }
-                    className="w-5 h-5"
-                    alt="feed management icon"
-                  />
-                  <span className="flex-1 ml-3 text-left whitespace-nowrap">
-                    Feed Management
-                  </span>
-                  <svg
-                    className="w-3 h-3"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 10 6"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m1 1 4 4 4-4"
-                    />
-                  </svg>
-                </div>
-                <ul
-                  id="dropdown-example"
-                  className={`${
-                    feedManagementDropdown ? "block" : "hidden"
-                  } py-2 space-y-2`}
-                >
-                  <li>
-                    <div
-                      className={
-                        location.pathname ===
-                        "/dashboard/feed-management/ration-library"
-                          ? "flex items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen ml-8"
-                          : "flex items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group ml-8"
-                      }
-                      onClick={() =>
-                        navigate("/dashboard/feed-management/ration-library")
-                      }
-                    >
-                      <img
-                        src={
-                          location.pathname ===
-                          "/dashboard/feed-management/ration-library"
-                            ? lineB
-                            : lineW
-                        }
-                        className="w-3 h-5 mr-4"
-                      ></img>
-                      <p>Ration Library</p>
-                    </div>
-                  </li>
-                  <li>
-                    <div
-                      className={
-                        location.pathname ===
-                        "/dashboard/feed-management/ingredient-inventory"
-                          ? "flex items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer  group bg-gGreen ml-8"
-                          : "flex items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group ml-8"
-                      }
-                      onClick={() =>
-                        navigate(
-                          "/dashboard/feed-management/ingredient-inventory"
-                        )
-                      }
-                    >
-                      <img
-                        src={
-                          location.pathname ===
-                          "/dashboard/feed-management/ingredient-inventory"
-                            ? lineB
-                            : lineW
-                        }
-                        className="w-3 h-5 mr-4"
-                      ></img>
-                      <p>Ingredient Inventory</p>
-                    </div>
-                  </li>
-                  <li>
-                    <div
-                      className={
-                        location.pathname ===
-                        "/dashboard/feed-management/ingredient-library"
-                          ? "flex items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer group bg-gGreen ml-8"
-                          : "flex items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group ml-8"
-                      }
-                      onClick={() =>
-                        navigate(
-                          "/dashboard/feed-management/ingredient-library"
-                        )
-                      }
-                    >
-                      <img
-                        src={
-                          location.pathname ===
-                          "/dashboard/feed-management/ingredient-library"
-                            ? lineB
-                            : lineW
-                        }
-                        className="w-3 h-5 mr-4"
-                      ></img>
-                      <p>Ingredient Library</p>
-                    </div>
-                  </li>
-                  <li>
-                    <div
-                      className={
-                        location.pathname ===
-                        "/dashboard/feed-management/suppliers"
-                          ? "flex items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer group bg-gGreen ml-8"
-                          : "flex items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group ml-8"
-                      }
-                      onClick={() =>
-                        navigate("/dashboard/feed-management/suppliers")
-                      }
-                    >
-                      <img
-                        src={
-                          location.pathname ===
-                          "/dashboard/feed-management/suppliers"
-                            ? lineB
-                            : lineW
-                        }
-                        className="w-3 h-5 mr-4"
-                      ></img>
-                      <p>Suppliers</p>
-                    </div>
-                  </li>
-                </ul>
-              </li> */}
+                      {/* livestock goals */}
+                      <li>
+                        <div
+                          className={
+                            location.pathname === "/dashboard/livestock-goals"
+                              ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer group bg-gGreen"
+                              : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
+                          }
+                          onClick={() => navigate("/dashboard/livestock-goals")}
+                        >
+                          <img
+                            src={
+                              location.pathname === "/dashboard/livestock-goals"
+                                ? goalsB
+                                : goalsW
+                            }
+                            className="w-5 h-5"
+                            alt="farm icon"
+                          />
+                          <span className="ml-3">Livestock Goals</span>
+                        </div>
+                      </li>
+                    </>
+                  )
+                ) : null}
               </ul>
               {/* support title */}
               <div className="px-4 pb-5 pt-[400px]">

@@ -4,14 +4,16 @@ import loadingAnimation from "../assets/svg/loading.svg";
 
 function Loading(props) {
   return (
-    <div className="flex flex-col items-center justify-center w-full h-screen">
-      <img
-        src={loadingAnimation}
-        className="w-44 h-44"
-        alt="geoblocs loading animation"
-      />
-      <p className="text-2xl font-bold">Please Wait</p>
-      <p className="text-lg font-light">{props.message}</p>
+    <div className="fixed z-20 w-screen h-screen">
+      <div className="flex flex-col items-center justify-center w-screen h-screen bg-black">
+        <img
+          src={loadingAnimation}
+          className="w-60 h-60"
+          alt="geoblocs loading animation"
+        />
+        <p className="text-2xl font-bold text-white">Please Wait</p>
+        <p className="text-lg font-light text-white">{props.message}</p>
+      </div>
     </div>
   );
 }

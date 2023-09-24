@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import banker from "../../assets/svg/banker.svg";
 import livestock from "../../assets/svg/livestock.svg";
 
 function SignupRoleSelection(props) {
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col items-center justify-center pt-12">
       {/* title */}
@@ -26,6 +28,12 @@ function SignupRoleSelection(props) {
           >
             <p className="py-2">Sign Up as a Banker</p>
           </button>
+          <button
+            className="px-12 py-2 text-lg font-bold text-black capitalize border-0 rounded-full w-[380px] h-fit btn bg-gGreen"
+            onClick={() => navigate("/signin")}
+          >
+            <p className="py-2">Sign In as a Banker</p>
+          </button>
         </div>
         {/* livestock role outer container */}
         <div className="flex flex-col items-center justify-center space-y-8">
@@ -42,6 +50,12 @@ function SignupRoleSelection(props) {
             onClick={() => props.setWindowState("livestock")}
           >
             <p className="py-2">Sign Up as a Livestock Owner</p>
+          </button>
+          <button
+            className="px-12 py-2 text-lg font-bold text-black capitalize border-0 rounded-full w-[380px] h-fit btn bg-gGreen"
+            onClick={() => navigate("/signin")}
+          >
+            <p className="py-2">Sign In as a Livestock Owner</p>
           </button>
         </div>
       </div>

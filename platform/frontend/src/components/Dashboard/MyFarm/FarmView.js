@@ -320,7 +320,7 @@ function FarmView(props) {
             <div className="flex flex-col items-center justify-center">
               <p className="text-white">Male</p>
               <p className="text-4xl font-bold text-white">
-                {appData.userProfile.livestock.length === 0 ? 0 : "value"}
+                {appData.userProfile.animals.length === 0 ? 0 : "value"}
               </p>
             </div>
             <button
@@ -336,7 +336,7 @@ function FarmView(props) {
             <div className="flex flex-col items-center justify-center">
               <p className="text-white">Female</p>
               <p className="text-4xl font-bold text-white">
-                {appData.userProfile.livestock.length === 0 ? 0 : "value"}
+                {appData.userProfile.animals.length === 0 ? 0 : "value"}
               </p>
             </div>
             <button

@@ -1,0 +1,8 @@
+API key
+68dK4eeKGERwYepNQnukl7OyJ_K_UAz3
+
+HTTPS
+https://polygon-mainnet.g.alchemy.com/v2/68dK4eeKGERwYepNQnukl7OyJ_K_UAz3
+
+Websockets
+wss://polygon-mainnet.g.alchemy.com/v2/68dK4eeKGERwYepNQnukl7OyJ_K_UAz3

@@ -11,14 +11,20 @@ import {
   getDocs,
   doc,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import {
   createUserWithEmailAndPassword,
+  deleteUser,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
 import { auth, db } from "./services/firebase.config";
 import Web3 from "web3";
+import contractAbi from "./smart-contract/abi.json";
+import testAbi from "./smart-contract/test.json";
+
+import { ethers } from "ethers";
 
 import Loading from "./components/Loading";
 import Navbar from "./components/Navbar";
@@ -43,6 +49,9 @@ export const AppProvider = ({ children }) => {
       address: "",
       balance: 0,
     },
+    livestockOwners: [],
+    contractAddress: "0xF77DCcbD7f8B1178E78182eEB10474971A9E8c55",
+    // contractAddress: "0x4A6Ef32d5fc59584301642B7BF9feDb69B91F2A3",
   });
 
   const [miscData, setMiscData] = useState({
@@ -75,28 +84,34 @@ export const AppProvider = ({ children }) => {
     const q = query(collection(db, "users"), where("userUid", "==", userId));
 
     try {
-      // Fetch the data
-      const querySnapshot = await getDocs(q);
+      const result = await updateFarmInContract(JSON.stringify(formData));
+      if (result === true) {
+        // Fetch the data
+        const querySnapshot = await getDocs(q);
 
-      for (const queryDoc of querySnapshot.docs) {
-        // Access the document reference
-        const documentRef = doc(db, "users", queryDoc.id);
-        formData.createdAt = serverTimestamp();
+        for (const queryDoc of querySnapshot.docs) {
+          // Access the document reference
+          const documentRef = doc(db, "users", queryDoc.id);
+          formData.createdAt = serverTimestamp();
 
-        // Update the document with new data
-        await updateDoc(documentRef, {
-          farm: {
-            ...formData,
-          },
-        });
-        console.log("Document successfully updated!");
-        toast.success("Farm registered successfully!");
-        return true; // Indicate success for at least one document
+          // Update the document with new data
+          await updateDoc(documentRef, {
+            farm: {
+              ...formData,
+            },
+          });
+          console.log("Document successfully updated!");
+          toast.success("Farm registered successfully!");
+          return true; // Indicate success for at least one document
+        }
+
+        // If the loop completes without returning, no documents matched the query
+        toast.error("No matching documents found!");
+        return false;
+      } else {
+        toast.error("Error updating farm data in contract");
+        return false;
       }
-
-      // If the loop completes without returning, no documents matched the query
-      toast.error("No matching documents found!");
-      return false;
     } catch (error) {
       console.error("Error updating document: ", error);
       toast.error("Error updating document!");
@@ -132,10 +147,40 @@ export const AppProvider = ({ children }) => {
       });
 
       console.log("Document written with ID: ", docRef.id);
-      toast.success("Signup Successful");
-      navigate("/signin");
 
-      return true; // Success
+      const result = await updateUserDataInContract({
+        uid: user.uid,
+        name: formData.name,
+        email: formData.email,
+        age: formData.age,
+        income: formData.income,
+        householdSize: formData.householdSize,
+        farm: "",
+        animals: "",
+        livestockGoals: "",
+      });
+
+      if (result === true) {
+        toast.success("Signup Successful");
+        navigate("/signin");
+        return true; // Success
+      } else {
+        toast.error("Error updating user data in contract");
+
+        // Delete the Firestore document since the contract update failed
+        const documentPath = `users/${docRef.id}`; // Replace with your document path
+        const documentReference = doc(db, documentPath);
+
+        try {
+          await deleteDoc(documentReference);
+          await deleteUser(auth.currentUser);
+          console.log("Firestore document deleted.");
+        } catch (error) {
+          console.error("Error deleting Firestore document: ", error);
+        }
+
+        return false; // Failure
+      }
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -180,6 +225,7 @@ export const AppProvider = ({ children }) => {
             }
           } else if (userData.role === "banker") {
             if (userData.walletAddress === appData.blockchain.address) {
+              await fetchAllLivestockOwners();
               toast.success("Signed in successfully");
               setAppData((prevState) => ({
                 ...prevState,
@@ -198,6 +244,7 @@ export const AppProvider = ({ children }) => {
         return true; // Signed in successfully
       } else {
         console.log("No matching documents found for the user.");
+        toast.error("Incorrect Credentials");
         return false; // No matching documents found
       }
     } catch (error) {
@@ -217,32 +264,38 @@ export const AppProvider = ({ children }) => {
     );
 
     try {
-      // Fetch the data
-      const querySnapshot = await getDocs(q);
+      const result = await updateFarmInContract("");
+      if (result === true) {
+        // Fetch the data
+        const querySnapshot = await getDocs(q);
 
-      for (const queryDoc of querySnapshot.docs) {
-        // Access the document reference
-        const documentRef = doc(db, "users", queryDoc.id);
+        for (const queryDoc of querySnapshot.docs) {
+          // Access the document reference
+          const documentRef = doc(db, "users", queryDoc.id);
 
-        // Update the document with new data
-        await updateDoc(documentRef, {
-          farm: {},
-        });
-        console.log("Document successfully updated!");
-        toast.success("Farm deleted successfully!");
-        setAppData((prevState) => ({
-          ...prevState,
-          userProfile: {
-            ...prevState.userProfile,
+          // Update the document with new data
+          await updateDoc(documentRef, {
             farm: {},
-          },
-        }));
-        return true; // Indicate success for at least one document
-      }
+          });
+          console.log("Document successfully updated!");
+          toast.success("Farm deleted successfully!");
+          setAppData((prevState) => ({
+            ...prevState,
+            userProfile: {
+              ...prevState.userProfile,
+              farm: {},
+            },
+          }));
+          return true; // Indicate success for at least one document
+        }
 
-      // If the loop completes without returning, no documents matched the query
-      toast.error("No matching documents found!");
-      return false;
+        // If the loop completes without returning, no documents matched the query
+        toast.error("No matching documents found!");
+        return false;
+      } else {
+        toast.error("Error updating farm data in contract");
+        return false;
+      }
     } catch (error) {
       console.error("Error updating document: ", error);
       toast.error("Error updating document!");
@@ -258,26 +311,34 @@ export const AppProvider = ({ children }) => {
     );
 
     try {
-      // Fetch the data
-      const querySnapshot = await getDocs(q);
+      const result = await updateAnimalsInContract(JSON.stringify(animalData));
+      const receipt = await wait(result);
+      if (result === true) {
+        // Fetch the data
+        const querySnapshot = await getDocs(q);
 
-      for (const queryDoc of querySnapshot.docs) {
-        // Access the document reference
-        const documentRef = doc(db, "users", queryDoc.id);
+        for (const queryDoc of querySnapshot.docs) {
+          // Access the document reference
+          const documentRef = doc(db, "users", queryDoc.id);
 
-        // Update the document with new data
-        await updateDoc(documentRef, {
-          animals: animalData,
-        });
+          // Update the document with new data
+          await updateDoc(documentRef, {
+            animals: animalData,
+          });
 
-        const newUserData = await getUserProfileFromId(appData.userId);
-        setAppData((prevState) => ({
-          ...prevState,
-          userProfile: newUserData,
-        }));
-        console.log("Data updated successfully!");
-        toast.success("Data updated successfully!");
-        return true; // Indicate success for at least one document
+          const newUserData = await getUserProfileFromId(appData.userId);
+          setAppData((prevState) => ({
+            ...prevState,
+            userProfile: newUserData,
+          }));
+          console.log("Data updated successfully!");
+          toast.success("Data updated successfully!");
+          return true; // Indicate success for at least one document
+        }
+      } else {
+        console.error("Error updating animals data in contract", error);
+        toast.error("Error updating animals data in contract");
+        return false;
       }
 
       // If the loop completes without returning, no documents matched the query
@@ -291,6 +352,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const updateLivestockGoalsForUser = async (goalsData) => {
+    setLoading({ status: true, message: "Updating livestock goals..." });
     // Construct the query
     const q = query(
       collection(db, "users"),
@@ -298,34 +360,46 @@ export const AppProvider = ({ children }) => {
     );
 
     try {
-      // Fetch the data
-      const querySnapshot = await getDocs(q);
+      const result = await updateLivestockGoalsInContract(
+        JSON.stringify(goalsData)
+      );
+      if (result === true) {
+        // Fetch the data
+        const querySnapshot = await getDocs(q);
 
-      for (const queryDoc of querySnapshot.docs) {
-        // Access the document reference
-        const documentRef = doc(db, "users", queryDoc.id);
+        for (const queryDoc of querySnapshot.docs) {
+          // Access the document reference
+          const documentRef = doc(db, "users", queryDoc.id);
 
-        // Update the document with new data
-        await updateDoc(documentRef, {
-          livestockGoals: goalsData,
-        });
+          // Update the document with new data
+          await updateDoc(documentRef, {
+            livestockGoals: goalsData,
+          });
 
-        const newUserData = await getUserProfileFromId(appData.userId);
-        setAppData((prevState) => ({
-          ...prevState,
-          userProfile: newUserData,
-        }));
-        console.log("Data updated successfully!");
-        // toast.success("Data updated successfully!");
-        return true; // Indicate success for at least one document
+          const newUserData = await getUserProfileFromId(appData.userId);
+          setAppData((prevState) => ({
+            ...prevState,
+            userProfile: newUserData,
+          }));
+          console.log("Data updated successfully!");
+          // toast.success("Data updated successfully!");
+          setLoading({ status: false, message: "" });
+          return true; // Indicate success for at least one document
+        }
+
+        // If the loop completes without returning, no documents matched the query
+        toast.error("No matching documents found!");
+        setLoading({ status: false, message: "" });
+        return false;
+      } else {
+        toast.error("Error updating livestock goals data in contract");
+        setLoading({ status: false, message: "" });
+        return false;
       }
-
-      // If the loop completes without returning, no documents matched the query
-      toast.error("No matching documents found!");
-      return false;
     } catch (error) {
       console.error("Error updating data: ", error);
       toast.error("Error updating data");
+      setLoading({ status: false, message: "" });
       return false;
     }
   };
@@ -445,7 +519,7 @@ export const AppProvider = ({ children }) => {
           headers: {
             accept: "application/json",
             "api-key":
-              "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",
+              "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",
             "content-type": "application/json",
           },
         }
@@ -492,10 +566,30 @@ export const AppProvider = ({ children }) => {
       });
 
       console.log("Document written with ID: ", docRef.id);
-      toast.success("Signup Successful");
-      navigate("/signin");
+      console.log("dtb", user.uid, formData.email);
+      const result = await updateBankerDataInContract(user.uid, formData.email);
+      if (result === true) {
+        toast.success("Signup Successful");
+        navigate("/signin");
 
-      return true; // Success
+        return true; // Success
+      } else {
+        toast.error("Error updating banker data in contract");
+
+        // Delete the Firestore document since the contract update failed
+        const documentPath = `users/${docRef.id}`; // Replace with your document path
+        const documentReference = doc(db, documentPath);
+
+        try {
+          await deleteDoc(documentReference);
+          await deleteUser(auth.currentUser);
+          console.log("Firestore document deleted.");
+        } catch (error) {
+          console.error("Error deleting Firestore document: ", error);
+        }
+
+        return false; // Failure
+      }
     } catch (error) {
       console.log("error", error);
       const errorCode = error.code;
@@ -503,6 +597,218 @@ export const AppProvider = ({ children }) => {
       toast.error(errorMessage);
 
       return false; // Failure
+    }
+  };
+
+  const fetchAllLivestockOwners = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "users"));
+
+      const livestockOwners = [];
+      querySnapshot.forEach((doc) => {
+        // doc.data() is the document data
+        if (doc.data().role === "livestockOwner") {
+          livestockOwners.push(doc.data());
+        }
+      });
+      console.log("livestockOwners", livestockOwners);
+      setAppData((prevState) => {
+        return {
+          ...prevState,
+          livestockOwners: livestockOwners,
+        };
+      });
+    } catch (error) {
+      console.log("Error getting documents: ", error);
+    }
+  };
+
+  const updateUserDataInContract = async (userData) => {
+    const {
+      uid,
+      name,
+      email,
+      age,
+      income,
+      householdSize,
+      farm,
+      animals,
+      livestockGoals,
+    } = userData;
+
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []);
+      const contract = new ethers.Contract(
+        appData.contractAddress,
+        contractAbi,
+        provider
+      );
+      const signer = provider.getSigner();
+      const contractWithSigner = contract.connect(signer);
+      const result = await contractWithSigner.updateUser(
+        uid,
+        name,
+        email,
+        age,
+        income,
+        householdSize,
+        farm,
+        animals,
+        livestockGoals
+      );
+      const receipt = await result.wait();
+      console.log("receipt", receipt);
+      console.log("result", result);
+      console.log("Farm data updated successfully!");
+      if (receipt.status === 1) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.log("Error updating user data in contract:", error);
+      toast.error("Error updating user data in contract");
+      return false;
+    }
+  };
+
+  const updateFarmInContract = async (farmData) => {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []);
+      const contract = new ethers.Contract(
+        appData.contractAddress,
+        contractAbi,
+        provider
+      );
+      const signer = provider.getSigner();
+      const contractWithSigner = contract.connect(signer);
+      const result = await contractWithSigner.updateFarm(farmData);
+      const receipt = await result.wait();
+      console.log("receipt", receipt);
+      console.log("result", result);
+      console.log("Farm data updated successfully!");
+      if (receipt.status === 1) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.log("Error updating farm data in contract:", error);
+      toast.error("Error updating farm data in contract");
+      return false;
+    }
+  };
+
+  const updateAnimalsInContract = async (animalsData) => {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []);
+      const contract = new ethers.Contract(
+        appData.contractAddress,
+        contractAbi,
+        provider
+      );
+      const signer = provider.getSigner();
+      const contractWithSigner = contract.connect(signer);
+      const result = await contractWithSigner.updateAnimals(
+        JSON.stringify(animalsData)
+      );
+      const receipt = await result.wait();
+      console.log("receipt", receipt);
+      console.log("result", result);
+      console.log("Farm data updated successfully!");
+      if (receipt.status === 1) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.log("Error updating animals data in contract:", error);
+      toast.error("Error updating animals data in contract");
+      return false;
+    }
+  };
+
+  const updateLivestockGoalsInContract = async (livestockGoalsData) => {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []);
+      const contract = new ethers.Contract(
+        appData.contractAddress,
+        contractAbi,
+        provider
+      );
+      const signer = provider.getSigner();
+      const contractWithSigner = contract.connect(signer);
+      const result = await contractWithSigner.updateLivestockGoals(
+        livestockGoalsData
+      );
+      const receipt = await result.wait();
+      console.log("receipt", receipt);
+      console.log("result", result);
+      console.log("Farm data updated successfully!");
+      if (receipt.status === 1) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.log("Error updating livestock goals data in contract:", error);
+      toast.error("Error updating livestock goals data in contract");
+      return false;
+    }
+  };
+
+  const updateBankerDataInContract = async (uid, email) => {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []);
+      const contract = new ethers.Contract(
+        appData.contractAddress,
+        contractAbi,
+        provider
+      );
+      const signer = provider.getSigner();
+      const contractWithSigner = contract.connect(signer);
+      const result = await contractWithSigner.updateBanker(uid, email);
+      const receipt = await result.wait();
+      console.log("receipt", receipt);
+      console.log("result", result);
+      console.log("Farm data updated successfully!");
+      if (receipt.status === 1) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.log("Error updating banker data in contract:", error);
+      toast.error("Error updating banker data in contract");
+      return false;
+    }
+  };
+
+  const getBankerDataFromContract = async () => {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []);
+      const contract = new ethers.Contract(
+        appData.contractAddress,
+        contractAbi,
+        provider
+      );
+      const signer = provider.getSigner();
+      const contractWithSigner = contract.connect(signer);
+      const result = await contractWithSigner.bankers(
+        appData.blockchain.address
+      );
+      console.log("result", result);
+      return result;
+    } catch (error) {
+      console.log("Error getting banker data from contract:", error);
+      toast.error("Error getting banker data from contract");
+      return false;
     }
   };
 
@@ -524,12 +830,17 @@ export const AppProvider = ({ children }) => {
         disconnectWallet,
         sendOtp,
         signupBanker,
+        fetchAllLivestockOwners,
+        updateUserDataInContract,
+        updateFarmInContract,
+        updateAnimalsInContract,
+        updateLivestockGoalsInContract,
       }}
     >
       <Toaster />
       <div className="flex flex-row h-screen">
         <Navbar />
-        {loading.status === "true" ? (
+        {loading.status === true ? (
           <Loading message={loading.message} />
         ) : null}
         <div className="flex flex-col w-full overflow-x-hidden bg-black">
