@@ -21,7 +21,7 @@ function Navbar(props) {
           <div className="flex flex-row items-center">
             <div
               className="flex flex-row items-center"
-              onClick={() => console.log("clicked")}
+              // onClick={() => console.log("clicked")}
             >
               <p className="mt-1">Who We Are</p>
             </div>

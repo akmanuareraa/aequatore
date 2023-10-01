@@ -60,8 +60,7 @@ function Landing(props) {
                 <button
                   className="px-12 py-2 font-bold text-black bg-white rounded-full"
                   onClick={() => {
-                    console.log("Coming soon!");
-                    toast.success("Coming soon!");
+                    window.location.href = "https://app.aequatore.it";
                   }}
                 >
                   <div className="flex flex-row items-center space-x-4">
@@ -134,8 +133,7 @@ function Landing(props) {
               <button
                 className="px-12 py-2 font-bold text-black bg-white rounded-full lg:hidden"
                 onClick={() => {
-                  console.log("Coming soon!");
-                  toast.success("Coming soon!");
+                  window.location.href = "https://app.aequatore.it";
                 }}
               >
                 <div className="flex flex-row items-center space-x-4">

@@ -49,13 +49,13 @@ function BankerSignup(props) {
   };
 
   const submitForm = async () => {
-    console.log("formData:", formData);
+    // console.log("formData:", formData);
     if (validateForm()) {
       try {
         const signUpResult = await signupBanker(formData);
-        console.log("signUpResult:", signUpResult);
+        // console.log("signUpResult:", signUpResult);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
   };

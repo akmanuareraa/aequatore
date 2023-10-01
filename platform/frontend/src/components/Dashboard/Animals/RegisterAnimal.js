@@ -55,7 +55,7 @@ function RegisterAnimal(props) {
       return;
     } else {
       try {
-        console.log("formData", formData);
+        // console.log("formData", formData);
         let tempAnimalData = formData;
         let tempAnimalsArray = appData.userProfile.animals;
         let randomId = Math.floor(Math.random() * 1000000000);
@@ -68,7 +68,7 @@ function RegisterAnimal(props) {
           toast.error("Error adding animal. Try again.");
         }
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         toast.error("Error adding animal. Try again.");
       }
     }

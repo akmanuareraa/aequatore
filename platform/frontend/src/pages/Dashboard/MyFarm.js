@@ -56,17 +56,15 @@ function MyFarm(props) {
 
   const handleFarmingSystemChange = (value) => {
     let tempArr = formData.farmingSystem;
-    console.log("s-s-s-s-s-s");
-    console.log("tempArr", tempArr);
+    // console.log("tempArr", tempArr);
     if (tempArr.includes(value)) {
-      console.log("removing", value);
+      // console.log("removing", value);
       tempArr = tempArr.filter((item) => item !== value);
     } else {
-      console.log("adding", value);
+      // console.log("adding", value);
       tempArr.push(value);
     }
-    console.log("tempArr", tempArr);
-    console.log("-f-f-f-f-f-");
+    // console.log("tempArr", tempArr);
     setFormData((prevState) => {
       return {
         ...prevState,
@@ -76,7 +74,7 @@ function MyFarm(props) {
   };
 
   useEffect(() => {
-    console.log("appData", appData);
+    // console.log("appData", appData);
     if (Object.keys(appData.userProfile.farm).length > 0) {
       setWindowState("farmView");
     } else {

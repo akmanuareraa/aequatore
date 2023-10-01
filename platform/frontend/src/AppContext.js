@@ -58,8 +58,6 @@ export const AppProvider = ({ children }) => {
     applicationCount: 0,
   });
 
-  const backendUrl = "http://localhost:3010";
-
   const getUserProfileFromId = async (id) => {
     const collectionRef = collection(db, "users");
     const userDataQuery = query(collectionRef, where("userUid", "==", id));
@@ -69,12 +67,12 @@ export const AppProvider = ({ children }) => {
     if (!userDataSnapshot.empty) {
       userDataSnapshot.forEach((doc) => {
         const userData = doc.data();
-        console.log("userData:", userData);
+        // console.log("userData:", userData);
         uData = userData;
       });
       return uData;
     } else {
-      console.log("No matching documents found for the user.");
+      // console.log("No matching documents found for the user.");
       return null;
     }
   };
@@ -100,7 +98,7 @@ export const AppProvider = ({ children }) => {
               ...formData,
             },
           });
-          console.log("Document successfully updated!");
+          // console.log("Document successfully updated!");
           toast.success("Farm registered successfully!");
           return true; // Indicate success for at least one document
         }
@@ -146,7 +144,7 @@ export const AppProvider = ({ children }) => {
         walletAddress: appData.blockchain.address,
       });
 
-      console.log("Document written with ID: ", docRef.id);
+      // console.log("Document written with ID: ", docRef.id);
 
       const result = await updateUserDataInContract({
         uid: user.uid,
@@ -174,7 +172,7 @@ export const AppProvider = ({ children }) => {
         try {
           await deleteDoc(documentReference);
           await deleteUser(auth.currentUser);
-          console.log("Firestore document deleted.");
+          // console.log("Firestore document deleted.");
         } catch (error) {
           console.error("Error deleting Firestore document: ", error);
         }
@@ -209,7 +207,7 @@ export const AppProvider = ({ children }) => {
       if (!userDataSnapshot.empty) {
         userDataSnapshot.forEach(async (doc) => {
           const userData = doc.data();
-          console.log("userData:", userData);
+          // console.log("userData:", userData);
           if (userData.role === "livestockOwner") {
             if (userData.walletAddress === appData.blockchain.address) {
               toast.success("Signed in successfully");
@@ -243,7 +241,7 @@ export const AppProvider = ({ children }) => {
 
         return true; // Signed in successfully
       } else {
-        console.log("No matching documents found for the user.");
+        // console.log("No matching documents found for the user.");
         toast.error("Incorrect Credentials");
         return false; // No matching documents found
       }
@@ -277,7 +275,7 @@ export const AppProvider = ({ children }) => {
           await updateDoc(documentRef, {
             farm: {},
           });
-          console.log("Document successfully updated!");
+          // console.log("Document successfully updated!");
           toast.success("Farm deleted successfully!");
           setAppData((prevState) => ({
             ...prevState,
@@ -331,12 +329,12 @@ export const AppProvider = ({ children }) => {
             ...prevState,
             userProfile: newUserData,
           }));
-          console.log("Data updated successfully!");
+          // console.log("Data updated successfully!");
           toast.success("Data updated successfully!");
           return true; // Indicate success for at least one document
         }
       } else {
-        console.error("Error updating animals data in contract", error);
+        // console.error("Error updating animals data in contract", error);
         toast.error("Error updating animals data in contract");
         return false;
       }
@@ -345,7 +343,7 @@ export const AppProvider = ({ children }) => {
       toast.error("No matching documents found!");
       return false;
     } catch (error) {
-      console.error("Error updating data: ", error);
+      // console.error("Error updating data: ", error);
       toast.error("Error updating data");
       return false;
     }
@@ -381,7 +379,7 @@ export const AppProvider = ({ children }) => {
             ...prevState,
             userProfile: newUserData,
           }));
-          console.log("Data updated successfully!");
+          // console.log("Data updated successfully!");
           // toast.success("Data updated successfully!");
           setLoading({ status: false, message: "" });
           return true; // Indicate success for at least one document
@@ -405,29 +403,29 @@ export const AppProvider = ({ children }) => {
   };
 
   const initializeWeb3 = async () => {
-    console.log("Initializing Web3...");
+    // console.log("Initializing Web3...");
     if (window.ethereum) {
-      console.log("MetaMask found");
+      // console.log("MetaMask found");
       const web3 = new Web3(window.ethereum);
       try {
         // Request account access
-        console.log("Requesting account access...");
+        // console.log("Requesting account access...");
         await window.ethereum.enable();
 
-        console.log("Fetching accounts...");
+        // console.log("Fetching accounts...");
         const accounts = await web3.eth.getAccounts();
         const chainId = await web3.eth.getChainId();
 
         // Check if connected to the Polygon testnet
         if (parseInt(chainId) !== 80001) {
-          console.log(
-            "Not connected to Polygon testnet",
-            accounts,
-            parseInt(chainId)
-          );
+          // console.log(
+          //   "Not connected to Polygon testnet",
+          //   accounts,
+          //   parseInt(chainId)
+          // );
           try {
             // Add the Polygon testnet
-            console.log("Adding Polygon testnet...");
+            // console.log("Adding Polygon testnet...");
             await window.ethereum.request({
               method: "wallet_addEthereumChain",
               params: [
@@ -444,19 +442,19 @@ export const AppProvider = ({ children }) => {
               ],
             });
           } catch (error) {
-            console.error("Error adding Polygon testnet:", error);
+            // console.error("Error adding Polygon testnet:", error);
           }
         }
 
         // Check MATIC balance
         try {
-          console.log("Checking balance...", accounts, chainId);
+          // console.log("Checking balance...", accounts, chainId);
           const balance = await web3.eth.getBalance(accounts[0]);
-          console.log(
-            "Balance:",
-            balance,
-            web3.utils.fromWei(balance, "ether")
-          );
+          // console.log(
+          //   "Balance:",
+          //   balance,
+          //   web3.utils.fromWei(balance, "ether")
+          // );
           setAppData((prevState) => {
             return {
               ...prevState,
@@ -472,13 +470,13 @@ export const AppProvider = ({ children }) => {
             alert("Balance too low. Please add funds.");
           }
         } catch (error) {
-          console.error("Error checking balance:", error);
+          // console.error("Error checking balance:", error);
         }
       } catch (error) {
-        console.error("Error connecting to MetaMask:", error);
+        // console.error("Error connecting to MetaMask:", error);
       }
     } else {
-      console.error("MetaMask not found");
+      // console.error("MetaMask not found");
     }
   };
 
@@ -524,7 +522,7 @@ export const AppProvider = ({ children }) => {
           },
         }
       );
-      console.log("response", response);
+      // console.log("response", response);
       if (response.status === 200 || response.status === 201) {
         setAppData((prevState) => {
           return {
@@ -537,21 +535,21 @@ export const AppProvider = ({ children }) => {
         return false;
       }
     } catch (error) {
-      console.log("error", error);
+      // console.log("error", error);
       return false;
     }
   };
 
   const signupBanker = async (formData) => {
     try {
-      console.log("formData", formData);
+      // console.log("formData", formData);
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         formData.email,
         formData.password
       );
 
-      console.log("userCredential", userCredential);
+      // console.log("userCredential", userCredential);
 
       // Signed in
       const user = userCredential.user;
@@ -565,8 +563,8 @@ export const AppProvider = ({ children }) => {
         walletAddress: appData.blockchain.address,
       });
 
-      console.log("Document written with ID: ", docRef.id);
-      console.log("dtb", user.uid, formData.email);
+      // console.log("Document written with ID: ", docRef.id);
+      // console.log("dtb", user.uid, formData.email);
       const result = await updateBankerDataInContract(user.uid, formData.email);
       if (result === true) {
         toast.success("Signup Successful");
@@ -583,15 +581,15 @@ export const AppProvider = ({ children }) => {
         try {
           await deleteDoc(documentReference);
           await deleteUser(auth.currentUser);
-          console.log("Firestore document deleted.");
+          // console.log("Firestore document deleted.");
         } catch (error) {
-          console.error("Error deleting Firestore document: ", error);
+          // console.error("Error deleting Firestore document: ", error);
         }
 
         return false; // Failure
       }
     } catch (error) {
-      console.log("error", error);
+      // console.log("error", error);
       const errorCode = error.code;
       const errorMessage = error.message;
       toast.error(errorMessage);
@@ -611,7 +609,7 @@ export const AppProvider = ({ children }) => {
           livestockOwners.push(doc.data());
         }
       });
-      console.log("livestockOwners", livestockOwners);
+      // console.log("livestockOwners", livestockOwners);
       setAppData((prevState) => {
         return {
           ...prevState,
@@ -619,7 +617,7 @@ export const AppProvider = ({ children }) => {
         };
       });
     } catch (error) {
-      console.log("Error getting documents: ", error);
+      // console.log("Error getting documents: ", error);
     }
   };
 
@@ -658,17 +656,17 @@ export const AppProvider = ({ children }) => {
         livestockGoals
       );
       const receipt = await result.wait();
-      console.log("receipt", receipt);
-      console.log("result", result);
-      console.log("Farm data updated successfully!");
+      // console.log("receipt", receipt);
+      // console.log("result", result);
+      // console.log("Farm data updated successfully!");
       if (receipt.status === 1) {
         return true;
       } else {
         return false;
       }
     } catch (error) {
-      console.log("Error updating user data in contract:", error);
-      toast.error("Error updating user data in contract");
+      // console.log("Error updating user data in contract:", error);
+      // toast.error("Error updating user data in contract");
       return false;
     }
   };
@@ -686,17 +684,17 @@ export const AppProvider = ({ children }) => {
       const contractWithSigner = contract.connect(signer);
       const result = await contractWithSigner.updateFarm(farmData);
       const receipt = await result.wait();
-      console.log("receipt", receipt);
-      console.log("result", result);
-      console.log("Farm data updated successfully!");
+      // console.log("receipt", receipt);
+      // console.log("result", result);
+      // console.log("Farm data updated successfully!");
       if (receipt.status === 1) {
         return true;
       } else {
         return false;
       }
     } catch (error) {
-      console.log("Error updating farm data in contract:", error);
-      toast.error("Error updating farm data in contract");
+      // console.log("Error updating farm data in contract:", error);
+      // toast.error("Error updating farm data in contract");
       return false;
     }
   };
@@ -716,17 +714,17 @@ export const AppProvider = ({ children }) => {
         JSON.stringify(animalsData)
       );
       const receipt = await result.wait();
-      console.log("receipt", receipt);
-      console.log("result", result);
-      console.log("Farm data updated successfully!");
+      // console.log("receipt", receipt);
+      // console.log("result", result);
+      // console.log("Farm data updated successfully!");
       if (receipt.status === 1) {
         return true;
       } else {
         return false;
       }
     } catch (error) {
-      console.log("Error updating animals data in contract:", error);
-      toast.error("Error updating animals data in contract");
+      // console.log("Error updating animals data in contract:", error);
+      // toast.error("Error updating animals data in contract");
       return false;
     }
   };
@@ -746,17 +744,17 @@ export const AppProvider = ({ children }) => {
         livestockGoalsData
       );
       const receipt = await result.wait();
-      console.log("receipt", receipt);
-      console.log("result", result);
-      console.log("Farm data updated successfully!");
+      // console.log("receipt", receipt);
+      // console.log("result", result);
+      // console.log("Farm data updated successfully!");
       if (receipt.status === 1) {
         return true;
       } else {
         return false;
       }
     } catch (error) {
-      console.log("Error updating livestock goals data in contract:", error);
-      toast.error("Error updating livestock goals data in contract");
+      // console.log("Error updating livestock goals data in contract:", error);
+      // toast.error("Error updating livestock goals data in contract");
       return false;
     }
   };
@@ -774,17 +772,17 @@ export const AppProvider = ({ children }) => {
       const contractWithSigner = contract.connect(signer);
       const result = await contractWithSigner.updateBanker(uid, email);
       const receipt = await result.wait();
-      console.log("receipt", receipt);
-      console.log("result", result);
-      console.log("Farm data updated successfully!");
+      // console.log("receipt", receipt);
+      // console.log("result", result);
+      // console.log("Farm data updated successfully!");
       if (receipt.status === 1) {
         return true;
       } else {
         return false;
       }
     } catch (error) {
-      console.log("Error updating banker data in contract:", error);
-      toast.error("Error updating banker data in contract");
+      // console.log("Error updating banker data in contract:", error);
+      // toast.error("Error updating banker data in contract");
       return false;
     }
   };
@@ -803,10 +801,10 @@ export const AppProvider = ({ children }) => {
       const result = await contractWithSigner.bankers(
         appData.blockchain.address
       );
-      console.log("result", result);
+      // console.log("result", result);
       return result;
     } catch (error) {
-      console.log("Error getting banker data from contract:", error);
+      // console.log("Error getting banker data from contract:", error);
       toast.error("Error getting banker data from contract");
       return false;
     }

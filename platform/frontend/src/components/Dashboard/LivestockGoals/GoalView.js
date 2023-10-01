@@ -24,9 +24,9 @@ function GoalView(props) {
   });
 
   const submitForm = async () => {
-    console.log("submitting form", formData);
+    // console.log("submitting form", formData);
     if (validateForm()) {
-      console.log("form validated");
+      // console.log("form validated");
       // remove an specific object from the tempArr using it's id
       let tempArr = appData.userProfile.livestockGoals.filter(
         (item) => item.id !== formData.id
@@ -49,7 +49,7 @@ function GoalView(props) {
   };
 
   const deleteGoal = async () => {
-    console.log("deleting goal");
+    // console.log("deleting goal");
     let tempArr = appData.userProfile.livestockGoals.filter(
       (item) => item.id !== formData.id
     );
@@ -63,7 +63,7 @@ function GoalView(props) {
   };
 
   const validateForm = () => {
-    console.log("validating form");
+    // console.log("validating form");
     if (
       formData.goalName === "" ||
       formData.goalType === "" ||

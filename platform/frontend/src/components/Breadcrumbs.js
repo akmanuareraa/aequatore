@@ -36,7 +36,7 @@ function Breadcrumbs(props) {
   };
 
   useEffect(() => {
-    console.log("appData.breadCrumbs", appData.breadCrumbs);
+    // console.log("appData.breadCrumbs", appData.breadCrumbs);
     if (Object.keys(appData.breadCrumbs).length > 0) {
       processElements();
     }

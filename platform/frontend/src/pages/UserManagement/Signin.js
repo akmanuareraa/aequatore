@@ -20,9 +20,9 @@ function Signin(props) {
     }
     try {
       const signInResult = await signInUser(email, password);
-      console.log("signInResult:", signInResult);
+      // console.log("signInResult:", signInResult);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

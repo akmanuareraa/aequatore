@@ -23,12 +23,12 @@ function CreateNewGoal(props) {
   });
 
   const submitForm = async () => {
-    console.log("submitting form", formData);
+    // console.log("submitting form", formData);
     if (validateForm()) {
-      console.log("form validated");
+      // console.log("form validated");
       // generate a random number to use as UID
       const id = Math.floor(Math.random() * 1000000000);
-      console.log("id:", id);
+      // console.log("id:", id);
       let tempFormData = formData;
       tempFormData.id = id;
       let tempArr = appData.userProfile.livestockGoals;
@@ -44,7 +44,7 @@ function CreateNewGoal(props) {
   };
 
   const validateForm = () => {
-    console.log("validating form");
+    // console.log("validating form");
     if (
       formData.goalName === "" ||
       formData.goalType === "" ||

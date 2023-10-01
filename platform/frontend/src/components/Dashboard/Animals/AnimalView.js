@@ -51,13 +51,13 @@ function AnimalView(props) {
   });
 
   const submitForm = async () => {
-    console.log("formData", formData);
+    // console.log("formData", formData);
     if (validateForm() === false) {
       toast.error("Please fill all the fields");
       return;
     } else {
       try {
-        console.log("formData", formData);
+        // console.log("formData", formData);
         let tempAnimalData = formData;
         let tempAnimalsArray = appData.userProfile.animals;
         // remove animal with specific id from the tempAnimalsArray
@@ -72,14 +72,14 @@ function AnimalView(props) {
           toast.error("Error adding animal. Try again.");
         }
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         toast.error("Error adding animal. Try again.");
       }
     }
   };
 
   const deleteAnimal = async () => {
-    console.log("dele", formData.id);
+    // console.log("dele", formData.id);
     try {
       let tempAnimalsArray = appData.userProfile.animals;
       // remove animal with specific id from the tempAnimalsArray
@@ -93,7 +93,7 @@ function AnimalView(props) {
         toast.error("Error deleting animal. Try again.");
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error("Error deleting animal. Try again.");
     }
   };
