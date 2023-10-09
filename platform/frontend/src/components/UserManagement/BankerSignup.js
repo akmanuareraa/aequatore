@@ -228,7 +228,7 @@ function BankerSignup(props) {
           <button
             className="px-16 py-2 mt-12 text-lg text-black capitalize border-0 rounded-full w-fit bg-gGreen btn"
             onClick={() => {
-              console.log("otp:", otp, appData.otp);
+              // console.log("otp:", otp, appData.otp);
               if (parseInt(otp) === appData.otp) {
                 setPhase(3);
                 toast.success("OTP verified successfully");

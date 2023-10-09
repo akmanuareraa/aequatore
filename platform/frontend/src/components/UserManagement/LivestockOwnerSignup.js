@@ -47,40 +47,30 @@ function LivestockSignup(props) {
   // };
 
   const handleFormSubmit = async () => {
-    const validations = [
-      [formData.name, "Please enter your name"],
-      [formData.email, "Please enter your email"],
-      [formData.password, "Please provide a password"],
-      [formData.confirmPassword, "Please confirm your password"],
-      [
-        formData.password === formData.confirmPassword,
-        "Passwords do not match",
-      ],
-      [formData.password.length >= 6, "Password must be atleast 6 characters"],
-      [formData.age, "Please enter your age"],
-      [formData.income, "Please enter your income"],
-      [formData.householdSize, "Please enter your household size"],
+    try {
+      const validations = [
+        [formData.name, "Please enter your name"],
+        [formData.email, "Please enter your email"],
+        [formData.password, "Please provide a password"],
+        [formData.confirmPassword, "Please confirm your password"],
+        [
+          formData.password === formData.confirmPassword,
+          "Passwords do not match",
+        ],
+        [
+          formData.password.length >= 6,
+          "Password must be atleast 6 characters",
+        ],
+        [formData.age, "Please enter your age"],
+        [formData.income, "Please enter your income"],
+        [formData.householdSize, "Please enter your household size"],
+      ];
 
-      // [livestockList.length !== 0, "Please enter your livestock details [1]"],
-    ];
-
-    // for (const [field, errorMessage] of validations) {
-    //   if (!field) {
-    //     toast.error(errorMessage);
-    //     console.log("error", livestockList.length);
-    //     return;
-    //   }
-    // }
-
-    // for (const livestock of livestockList) {
-    //   if (!livestock.name || !livestock.population) {
-    //     toast.error("Please enter livestock details [2]");
-    //     return;
-    //   }
-    // }
-
-    const signupResult = await signupLivestockOwner(formData);
-    console.log("signupResult", signupResult);
+      const signupResult = await signupLivestockOwner(formData);
+      console.log("signupResult", signupResult);
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   return (

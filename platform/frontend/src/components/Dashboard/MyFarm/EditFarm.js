@@ -101,7 +101,7 @@ function EditFarm(props) {
   };
 
   const submitForm = async () => {
-    console.log("formData", formData);
+    // console.log("formData", formData);
     try {
       if (!formValidation()) {
         return;

@@ -47,6 +47,7 @@ function RegisterAnimal(props) {
       breederOrSupplier: "",
     },
     additionalNotes: "",
+    animalValue: ""
   });
 
   const submitForm = async () => {
@@ -2320,6 +2321,33 @@ function RegisterAnimal(props) {
                   });
                 }}
               />
+            </div>
+
+            {/* animal value */}
+            <div className="form-control">
+              <label className="label">
+                <span className="font-bold text-white label-text">
+                  Animal Value
+                </span>
+              </label>
+              <input
+                type="text"
+                placeholder="Enter in Local Currency"
+                className="w-[350px] px-4 py-6 text-white border-white rounded-none text-md bg-gGray input input-bordered"
+                value={formData.animalValue}
+                onChange={(e) => {
+                  setFormData((prevState) => {
+                    return {
+                      ...prevState,
+                      animalValue: e.target.value,
+                    };
+                  });
+                }}
+              />
+              <div className="flex flex-row pt-2">
+                <p className="font-bold underline">USD</p>
+                <p className="">&nbsp;${formData.animalValue}</p>
+              </div>
             </div>
           </div>
         </div>
