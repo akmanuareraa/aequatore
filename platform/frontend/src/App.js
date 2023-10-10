@@ -28,6 +28,7 @@ import AnimalView from "./components/Dashboard/Animals/AnimalView";
 import GoalView from "./components/Dashboard/LivestockGoals/GoalView";
 import BankerDashboard from "./pages/Banker/BankerDashboard";
 import LivesotckOwnerView from "./pages/Banker/LivesotckOwnerView";
+import LivestockValueView from "./components/Dashboard/LivestockValue/LivestockValueView";
 
 function App() {
   const location = useLocation();
@@ -167,6 +168,14 @@ function App() {
           element={
             <PrivateRouteGuard>
               <CreateNewGoal />
+            </PrivateRouteGuard>
+          }
+        />
+        <Route
+          path="/dashboard/livestock-value"
+          element={
+            <PrivateRouteGuard>
+              <LivestockValueView />
             </PrivateRouteGuard>
           }
         />

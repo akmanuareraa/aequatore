@@ -50,7 +50,7 @@ export const AppProvider = ({ children }) => {
       balance: 0,
     },
     livestockOwners: [],
-    contractAddress: "0xF77DCcbD7f8B1178E78182eEB10474971A9E8c55",
+    contractAddress: "0x44ABf0aD6D19371973d54809Aa4573757BBf69e7",
     // contractAddress: "0x4A6Ef32d5fc59584301642B7BF9feDb69B91F2A3",
   });
 
@@ -391,6 +391,59 @@ export const AppProvider = ({ children }) => {
         return false;
       } else {
         toast.error("Error updating livestock goals data in contract");
+        setLoading({ status: false, message: "" });
+        return false;
+      }
+    } catch (error) {
+      console.error("Error updating data: ", error);
+      toast.error("Error updating data");
+      setLoading({ status: false, message: "" });
+      return false;
+    }
+  };
+
+  const updateLivestockValueForUser = async (value) => {
+    setLoading({ status: true, message: "Updating livestock value..." });
+    // Construct the query
+    const q = query(
+      collection(db, "users"),
+      where("userUid", "==", appData.userId)
+    );
+
+    try {
+      const result = await updateLivestockValueInContract(
+        JSON.stringify(value)
+      );
+      if (result === true) {
+        // Fetch the data
+        const querySnapshot = await getDocs(q);
+
+        for (const queryDoc of querySnapshot.docs) {
+          // Access the document reference
+          const documentRef = doc(db, "users", queryDoc.id);
+
+          // Update the document with new data
+          await updateDoc(documentRef, {
+            livestockValue: value,
+          });
+
+          const newUserData = await getUserProfileFromId(appData.userId);
+          setAppData((prevState) => ({
+            ...prevState,
+            userProfile: newUserData,
+          }));
+          // console.log("Data updated successfully!");
+          // toast.success("Data updated successfully!");
+          setLoading({ status: false, message: "" });
+          return true; // Indicate success for at least one document
+        }
+
+        // If the loop completes without returning, no documents matched the query
+        toast.error("No matching documents found!");
+        setLoading({ status: false, message: "" });
+        return false;
+      } else {
+        toast.error("Error updating livestock value data in contract");
         setLoading({ status: false, message: "" });
         return false;
       }
@@ -759,6 +812,36 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const updateLivestockValueInContract = async (value) => {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []);
+      const contract = new ethers.Contract(
+        appData.contractAddress,
+        contractAbi,
+        provider
+      );
+      const signer = provider.getSigner();
+      const contractWithSigner = contract.connect(signer);
+      const result = await contractWithSigner.updateLivestockValue(
+        value
+      );
+      const receipt = await result.wait();
+      // console.log("receipt", receipt);
+      // console.log("result", result);
+      // console.log("Farm data updated successfully!");
+      if (receipt.status === 1) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      // console.log("Error updating livestock goals data in contract:", error);
+      // toast.error("Error updating livestock goals data in contract");
+      return false;
+    }
+  };
+
   const updateBankerDataInContract = async (uid, email) => {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -833,14 +916,13 @@ export const AppProvider = ({ children }) => {
         updateFarmInContract,
         updateAnimalsInContract,
         updateLivestockGoalsInContract,
+        updateLivestockValueForUser,
       }}
     >
       <Toaster />
       <div className="flex flex-row h-screen">
         <Navbar />
-        {loading.status === true ? (
-          <Loading message={loading.message} />
-        ) : null}
+        {loading.status === true ? <Loading message={loading.message} /> : null}
         <div className="flex flex-col w-full overflow-x-hidden bg-black">
           <Header />
           <div className="h-4"></div>

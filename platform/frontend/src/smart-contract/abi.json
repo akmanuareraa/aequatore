@@ -91,6 +91,11 @@
 						"type": "string"
 					},
 					{
+						"internalType": "string",
+						"name": "livestockValue",
+						"type": "string"
+					},
+					{
 						"internalType": "address",
 						"name": "wallet",
 						"type": "address"
@@ -158,6 +163,11 @@
 					{
 						"internalType": "string",
 						"name": "livestockGoals",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "livestockValue",
 						"type": "string"
 					},
 					{
@@ -235,6 +245,19 @@
 		"inputs": [
 			{
 				"internalType": "string",
+				"name": "_livestockValue",
+				"type": "string"
+			}
+		],
+		"name": "updateLivestockValue",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
 				"name": "_uid",
 				"type": "string"
 			},
@@ -276,6 +299,11 @@
 			{
 				"internalType": "string",
 				"name": "_livestockGoals",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_livestockValue",
 				"type": "string"
 			}
 		],
@@ -342,6 +370,11 @@
 			{
 				"internalType": "string",
 				"name": "livestockGoals",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "livestockValue",
 				"type": "string"
 			},
 			{

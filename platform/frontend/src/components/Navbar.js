@@ -150,7 +150,7 @@ function Navbar(props) {
                       </li>
 
                       {/* livestock goals */}
-                      <li>
+                      {/* <li>
                         <div
                           className={
                             location.pathname === "/dashboard/livestock-goals"
@@ -169,6 +169,29 @@ function Navbar(props) {
                             alt="farm icon"
                           />
                           <span className="ml-3">Livestock Goals</span>
+                        </div>
+                      </li> */}
+
+                      {/* livestock value */}
+                      <li>
+                        <div
+                          className={
+                            location.pathname === "/dashboard/livestock-value"
+                              ? "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-black hover:cursor-pointer group bg-gGreen"
+                              : "flex flex-row items-center px-4 py-3 text-gray-900 rounded-lg text-white hover:cursor-pointer hover:bg-white/10 group"
+                          }
+                          onClick={() => navigate("/dashboard/livestock-value")}
+                        >
+                          <img
+                            src={
+                              location.pathname === "/dashboard/livestock-value"
+                                ? goalsB
+                                : goalsW
+                            }
+                            className="w-5 h-5"
+                            alt="farm icon"
+                          />
+                          <span className="ml-3">Livestock Value</span>
                         </div>
                       </li>
                     </>
