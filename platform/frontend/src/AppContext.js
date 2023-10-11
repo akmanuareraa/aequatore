@@ -158,6 +158,8 @@ export const AppProvider = ({ children }) => {
         livestockGoals: "",
       });
 
+      console.log("result", result);
+
       if (result === true) {
         toast.success("Signup Successful");
         navigate("/signin");
@@ -706,11 +708,12 @@ export const AppProvider = ({ children }) => {
         householdSize,
         farm,
         animals,
-        livestockGoals
+        livestockGoals,
+        "0"
       );
       const receipt = await result.wait();
-      // console.log("receipt", receipt);
-      // console.log("result", result);
+      console.log("receipt", receipt);
+      console.log("result", result);
       // console.log("Farm data updated successfully!");
       if (receipt.status === 1) {
         return true;
@@ -718,7 +721,7 @@ export const AppProvider = ({ children }) => {
         return false;
       }
     } catch (error) {
-      // console.log("Error updating user data in contract:", error);
+      console.log("Error updating user data in contract:", error);
       // toast.error("Error updating user data in contract");
       return false;
     }
