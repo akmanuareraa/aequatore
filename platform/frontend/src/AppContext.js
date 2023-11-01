@@ -21,9 +21,15 @@ import {
 } from "firebase/auth";
 import { auth, db } from "./services/firebase.config";
 import Web3 from "web3";
+
+import { Web3Auth } from "@web3auth/modal";
+import { WALLET_ADAPTERS, CHAIN_NAMESPACES, IProvider } from "@web3auth/base";
+import { Web3AuthNoModal } from "@web3auth/no-modal";
+import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
+import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
+
 import contractAbi from "./smart-contract/abi.json";
 import testAbi from "./smart-contract/test.json";
-
 import { ethers } from "ethers";
 
 import Loading from "./components/Loading";
@@ -57,6 +63,58 @@ export const AppProvider = ({ children }) => {
   const [miscData, setMiscData] = useState({
     applicationCount: 0,
   });
+
+  const [web3authState, setWeb3AuthState] = useState(null);
+
+  const initWeb3Auth = async () => {
+    const chainConfig = {
+      chainNamespace: "eip155",
+      chainId: "0x13881",
+      rpcTarget: "https://rpc-mumbai.maticvigil.com",
+      displayName: "Polygon Testnet",
+      blockExplorer: "https://polygon.etherscan.io",
+      ticker: "MATIC",
+      tickerName: "Polygon",
+    };
+
+    // Initialize within useEffect()
+    const web3auth = new Web3Auth({
+      clientId:
+        "BCrXbYHPmzm1hH6BkBVOY7IxIHWszd61qZxjk2RbHsMsvE3I0nIddBisLanMV2Kr6nE2iAD6mRdAnYrmLzXpKD8", // Get your Client ID from the Web3Auth Dashboard
+      web3AuthNetwork: "sapphire_devnet", // Web3Auth Network
+      chainConfig,
+    });
+
+    // ===
+    const privateKeyProvider = new EthereumPrivateKeyProvider({
+      config: { chainConfig },
+    });
+
+    const openloginAdapter = new OpenloginAdapter({
+      adapterSettings: {
+        uxMode: "redirect", // redirect or popup
+        loginConfig: {
+          jwt: {
+            verifier: "aequatore-web3auth-firebase", // name of the verifier created on Web3Auth Dashboard
+            typeOfLogin: "jwt",
+            clientId:
+              "BCrXbYHPmzm1hH6BkBVOY7IxIHWszd61qZxjk2RbHsMsvE3I0nIddBisLanMV2Kr6nE2iAD6mRdAnYrmLzXpKD8",
+          },
+        },
+      },
+      privateKeyProvider,
+    });
+
+    web3auth.configureAdapter(openloginAdapter);
+
+    setWeb3AuthState(web3auth);
+
+    await web3auth.initModal();
+  };
+
+  useEffect(() => {
+    initWeb3Auth();
+  }, []);
 
   const getUserProfileFromId = async (id) => {
     const collectionRef = collection(db, "users");
@@ -199,6 +257,24 @@ export const AppProvider = ({ children }) => {
         password
       );
       const user = userCredential.user;
+
+      console.log("User sign in response: ", userCredential);
+
+      // =========================
+      // await web3authState.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+      //   loginProvider: "jwt",
+      //   extraLoginOptions: {
+      //     id_token: userCredential._tokenResponse.idToken,
+      //     verifierIdField: "sub", // same as your JWT Verifier ID field
+      //     domain:""
+      //   },
+      // });
+
+      // await web3authState.connect();
+
+      // const web3authUser = await web3authState.getUserInfo();
+      // console.log("User info from web3 auth", web3authUser);
+      // =============================
 
       const userDataQuery = query(
         collectionRef,
@@ -826,9 +902,7 @@ export const AppProvider = ({ children }) => {
       );
       const signer = provider.getSigner();
       const contractWithSigner = contract.connect(signer);
-      const result = await contractWithSigner.updateLivestockValue(
-        value
-      );
+      const result = await contractWithSigner.updateLivestockValue(value);
       const receipt = await result.wait();
       // console.log("receipt", receipt);
       // console.log("result", result);
