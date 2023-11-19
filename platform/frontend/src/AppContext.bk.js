@@ -32,10 +32,6 @@ import contractAbi from "./smart-contract/abi.json";
 import testAbi from "./smart-contract/test.json";
 import { ethers } from "ethers";
 
-import { ECDSAProvider, getRPCProviderOwner } from "@zerodev/sdk";
-import { encodeFunctionData, createPublicClient, http } from "viem";
-import { polygonMumbai } from "viem/chains";
-
 import Loading from "./components/Loading";
 import Navbar from "./components/Navbar";
 import Header from "./components/Header";
@@ -52,19 +48,15 @@ export const AppProvider = ({ children }) => {
 
   const [appData, setAppData] = useState({
     userProfile: null,
-    userEmail: null,
     currentHeaderTitle: "",
     breadCrumbs: [],
-    web3auth: null,
     blockchain: {
       web3: null,
       address: "",
       balance: 0,
     },
-    loggedIn: false,
     livestockOwners: [],
     contractAddress: "0x44ABf0aD6D19371973d54809Aa4573757BBf69e7",
-    projectId: "d460dbe8-767b-4cfd-9da3-c1e86b16c089",
     // contractAddress: "0x4A6Ef32d5fc59584301642B7BF9feDb69B91F2A3",
   });
 
@@ -73,13 +65,6 @@ export const AppProvider = ({ children }) => {
   });
 
   const [web3authState, setWeb3AuthState] = useState(null);
-
-  const publicClient = createPublicClient({
-    chain: polygonMumbai,
-    transport: http(
-      "https://polygon-mumbai.infura.io/v3/f36f7f706a58477884ce6fe89165666c"
-    ),
-  });
 
   const initWeb3Auth = async () => {
     const chainConfig = {
@@ -98,53 +83,42 @@ export const AppProvider = ({ children }) => {
         "BCrXbYHPmzm1hH6BkBVOY7IxIHWszd61qZxjk2RbHsMsvE3I0nIddBisLanMV2Kr6nE2iAD6mRdAnYrmLzXpKD8", // Get your Client ID from the Web3Auth Dashboard
       web3AuthNetwork: "sapphire_devnet", // Web3Auth Network
       chainConfig,
-      uiConfig: {
-        theme: "dark",
-        loginMethodsOrder: [
-          "google",
-          "facebook",
-          "email_passwordless",
-          "twitter",
-        ],
+    });
+
+    // ===
+    const privateKeyProvider = new EthereumPrivateKeyProvider({
+      config: { chainConfig },
+    });
+
+    const openloginAdapter = new OpenloginAdapter({
+      adapterSettings: {
+        uxMode: "redirect", // redirect or popup
+        loginConfig: {
+          jwt: {
+            verifier: "aequatore-web3auth-firebase", // name of the verifier created on Web3Auth Dashboard
+            typeOfLogin: "jwt",
+            clientId:
+              "BCrXbYHPmzm1hH6BkBVOY7IxIHWszd61qZxjk2RbHsMsvE3I0nIddBisLanMV2Kr6nE2iAD6mRdAnYrmLzXpKD8",
+          },
+        },
       },
+      privateKeyProvider,
     });
 
-    // setWeb3AuthState(web3auth);
+    web3auth.configureAdapter(openloginAdapter);
 
-    setAppData((prevState) => {
-      return {
-        ...prevState,
-        web3auth: web3auth,
-      };
-    });
+    setWeb3AuthState(web3auth);
 
     await web3auth.initModal();
-
-    console.log("Model initialized..", web3auth.connected);
-
-    if (web3auth.connected === true) {
-      setAppData((prevState) => {
-        return {
-          ...prevState,
-          loggedIn: true,
-        };
-      });
-      return true;
-    }
   };
 
   useEffect(() => {
     initWeb3Auth();
   }, []);
 
-  // aa
   const getUserProfileFromId = async (id) => {
-    console.log("Fetching user profile from id...", appData.userEmail);
     const collectionRef = collection(db, "users");
-    const userDataQuery = query(
-      collectionRef,
-      where("userUid", "==", appData.userEmail)
-    );
+    const userDataQuery = query(collectionRef, where("userUid", "==", id));
     const userDataSnapshot = await getDocs(userDataQuery);
     let uData = null;
 
@@ -161,13 +135,9 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // aa
   const updateFarmForUser = async (userId, formData) => {
     // Construct the query
-    const q = query(
-      collection(db, "users"),
-      where("userUid", "==", appData.userEmail)
-    );
+    const q = query(collection(db, "users"), where("userUid", "==", userId));
 
     try {
       const result = await updateFarmInContract(JSON.stringify(formData));
@@ -205,21 +175,20 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // aa
   const signupLivestockOwner = async (formData) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         formData.email,
-        formData.email
+        formData.password
       );
 
       // Signed in
-      // const user = userCredential.user;
+      const user = userCredential.user;
       const collectionRef = collection(db, "users");
 
       const docRef = await addDoc(collectionRef, {
-        userUid: formData.email,
+        userUid: user.uid,
         name: formData.name,
         email: formData.email,
         age: formData.age,
@@ -236,7 +205,7 @@ export const AppProvider = ({ children }) => {
       // console.log("Document written with ID: ", docRef.id);
 
       const result = await updateUserDataInContract({
-        uid: formData.email,
+        uid: user.uid,
         name: formData.name,
         email: formData.email,
         age: formData.age,
@@ -279,55 +248,73 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // aa
-  const signInUser = async (email) => {
+  const signInUser = async (email, password) => {
     try {
-      console.log("Signing In AC...", email);
       const collectionRef = collection(db, "users");
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
-        email
+        password
       );
       const user = userCredential.user;
 
       console.log("User sign in response: ", userCredential);
 
-      const userDataQuery = query(collectionRef, where("userUid", "==", email));
-      const userDataSnapshot = await getDocs(userDataQuery);
+      // =========================
+      // await web3authState.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+      //   loginProvider: "jwt",
+      //   extraLoginOptions: {
+      //     id_token: userCredential._tokenResponse.idToken,
+      //     verifierIdField: "sub", // same as your JWT Verifier ID field
+      //     domain:""
+      //   },
+      // });
 
-      console.log("userDataSnapshot", userDataSnapshot, user.uid);
+      // await web3authState.connect();
+
+      // const web3authUser = await web3authState.getUserInfo();
+      // console.log("User info from web3 auth", web3authUser);
+      // =============================
+
+      const userDataQuery = query(
+        collectionRef,
+        where("userUid", "==", user.uid)
+      );
+      const userDataSnapshot = await getDocs(userDataQuery);
 
       if (!userDataSnapshot.empty) {
         userDataSnapshot.forEach(async (doc) => {
           const userData = doc.data();
           // console.log("userData:", userData);
           if (userData.role === "livestockOwner") {
-            toast.success("Signed in successfully");
-            setAppData((prevState) => ({
-              ...prevState,
-              userProfile: userData,
-              userId: auth.currentUser.uid,
-            }));
-            navigate("/dashboard/my-farm");
+            if (userData.walletAddress === appData.blockchain.address) {
+              toast.success("Signed in successfully");
+              setAppData((prevState) => ({
+                ...prevState,
+                userProfile: userData,
+                userId: auth.currentUser.uid,
+              }));
+              navigate("/dashboard/my-farm");
+            } else {
+              await signOut(auth);
+              toast.error("Please connect to the correct wallet");
+            }
           } else if (userData.role === "banker") {
-            await fetchAllLivestockOwners();
-            toast.success("Signed in successfully");
-            setAppData((prevState) => ({
-              ...prevState,
-              userProfile: userData,
-              userId: auth.currentUser.uid,
-              currentHeaderTitle: "Banker Dashboard",
-            }));
-            navigate("/dashboard/banker");
+            if (userData.walletAddress === appData.blockchain.address) {
+              await fetchAllLivestockOwners();
+              toast.success("Signed in successfully");
+              setAppData((prevState) => ({
+                ...prevState,
+                userProfile: userData,
+                userId: auth.currentUser.uid,
+                currentHeaderTitle: "Banker Dashboard",
+              }));
+              navigate("/dashboard/banker");
+            } else {
+              await signOut(auth);
+              toast.error("Please connect to the correct wallet");
+            }
           }
-        });
-
-        setAppData((prevState) => {
-          return {
-            ...prevState,
-            userEmail: email,
-          };
         });
 
         return true; // Signed in successfully
@@ -345,12 +332,11 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // aa
   const deleteFarmForUser = async () => {
     // Construct the query
     const q = query(
       collection(db, "users"),
-      where("userUid", "==", appData.userEmail)
+      where("userUid", "==", appData.userId)
     );
 
     try {
@@ -393,16 +379,16 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // aa
   const addAnimalForUser = async (animalData) => {
     // Construct the query
     const q = query(
       collection(db, "users"),
-      where("userUid", "==", appData.userEmail)
+      where("userUid", "==", appData.userId)
     );
 
     try {
       const result = await updateAnimalsInContract(JSON.stringify(animalData));
+      const receipt = await wait(result);
       if (result === true) {
         // Fetch the data
         const querySnapshot = await getDocs(q);
@@ -441,13 +427,65 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // aa
+  const updateLivestockGoalsForUser = async (goalsData) => {
+    setLoading({ status: true, message: "Updating livestock goals..." });
+    // Construct the query
+    const q = query(
+      collection(db, "users"),
+      where("userUid", "==", appData.userId)
+    );
+
+    try {
+      const result = await updateLivestockGoalsInContract(
+        JSON.stringify(goalsData)
+      );
+      if (result === true) {
+        // Fetch the data
+        const querySnapshot = await getDocs(q);
+
+        for (const queryDoc of querySnapshot.docs) {
+          // Access the document reference
+          const documentRef = doc(db, "users", queryDoc.id);
+
+          // Update the document with new data
+          await updateDoc(documentRef, {
+            livestockGoals: goalsData,
+          });
+
+          const newUserData = await getUserProfileFromId(appData.userId);
+          setAppData((prevState) => ({
+            ...prevState,
+            userProfile: newUserData,
+          }));
+          // console.log("Data updated successfully!");
+          // toast.success("Data updated successfully!");
+          setLoading({ status: false, message: "" });
+          return true; // Indicate success for at least one document
+        }
+
+        // If the loop completes without returning, no documents matched the query
+        toast.error("No matching documents found!");
+        setLoading({ status: false, message: "" });
+        return false;
+      } else {
+        toast.error("Error updating livestock goals data in contract");
+        setLoading({ status: false, message: "" });
+        return false;
+      }
+    } catch (error) {
+      console.error("Error updating data: ", error);
+      toast.error("Error updating data");
+      setLoading({ status: false, message: "" });
+      return false;
+    }
+  };
+
   const updateLivestockValueForUser = async (value) => {
     setLoading({ status: true, message: "Updating livestock value..." });
     // Construct the query
     const q = query(
       collection(db, "users"),
-      where("userUid", "==", appData.userEmail)
+      where("userUid", "==", appData.userId)
     );
 
     try {
@@ -495,7 +533,6 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // aa
   const initializeWeb3 = async () => {
     // console.log("Initializing Web3...");
     if (window.ethereum) {
@@ -574,7 +611,6 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // aa
   const disconnectWallet = async () => {
     setAppData((prevState) => {
       return {
@@ -589,7 +625,6 @@ export const AppProvider = ({ children }) => {
     });
   };
 
-  // aa
   const sendOtp = async (email) => {
     try {
       const otp = Math.floor(100000 + Math.random() * 900000);
@@ -636,14 +671,13 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // aa
   const signupBanker = async (formData) => {
     try {
       // console.log("formData", formData);
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         formData.email,
-        formData.email
+        formData.password
       );
 
       // console.log("userCredential", userCredential);
@@ -653,18 +687,16 @@ export const AppProvider = ({ children }) => {
       const collectionRef = collection(db, "users");
 
       const docRef = await addDoc(collectionRef, {
-        userUid: formData.email,
+        userUid: user.uid,
         email: formData.email,
         role: "banker",
         createdAt: serverTimestamp(),
+        walletAddress: appData.blockchain.address,
       });
 
       // console.log("Document written with ID: ", docRef.id);
       // console.log("dtb", user.uid, formData.email);
-      const result = await updateBankerDataInContract(
-        formData.email,
-        formData.email
-      );
+      const result = await updateBankerDataInContract(user.uid, formData.email);
       if (result === true) {
         toast.success("Signup Successful");
         navigate("/signin");
@@ -697,7 +729,6 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // aa
   const fetchAllLivestockOwners = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, "users"));
@@ -721,7 +752,6 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // aa
   const updateUserDataInContract = async (userData) => {
     const {
       uid,
@@ -736,190 +766,183 @@ export const AppProvider = ({ children }) => {
     } = userData;
 
     try {
-      try {
-        const signer = await ECDSAProvider.init({
-          projectId: appData.projectId,
-          owner: getRPCProviderOwner(appData.web3auth.provider),
-        });
-
-        const address = await signer.getAddress();
-        console.log("Address: ", address);
-
-        const { hash } = await signer.sendUserOperation({
-          target: appData.contractAddress,
-          data: encodeFunctionData({
-            abi: contractAbi,
-            functionName: "updateUser",
-            args: [
-              uid,
-              name,
-              email,
-              age,
-              income,
-              householdSize,
-              farm,
-              animals,
-              livestockGoals,
-              "0",
-            ],
-          }),
-          // value: value,
-        });
-        const txnHash = await signer.waitForUserOperationTransaction(hash);
-        console.log("txnHash", txnHash);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []);
+      const contract = new ethers.Contract(
+        appData.contractAddress,
+        contractAbi,
+        provider
+      );
+      const signer = provider.getSigner();
+      const contractWithSigner = contract.connect(signer);
+      const result = await contractWithSigner.updateUser(
+        uid,
+        name,
+        email,
+        age,
+        income,
+        householdSize,
+        farm,
+        animals,
+        livestockGoals,
+        "0"
+      );
+      const receipt = await result.wait();
+      console.log("receipt", receipt);
+      console.log("result", result);
+      // console.log("Farm data updated successfully!");
+      if (receipt.status === 1) {
         return true;
-      } catch (error) {
-        console.log("SF error", error);
+      } else {
+        return false;
       }
     } catch (error) {
       console.log("Error updating user data in contract:", error);
-      toast.error(
-        "Error updating user data in contract. Please try again later."
-      );
+      // toast.error("Error updating user data in contract");
       return false;
     }
   };
 
-  // aa
   const updateFarmInContract = async (farmData) => {
     try {
-      const signer = await ECDSAProvider.init({
-        projectId: appData.projectId,
-        owner: getRPCProviderOwner(appData.web3auth.provider),
-      });
-
-      const address = await signer.getAddress();
-      console.log("Address: ", address);
-
-      const { hash } = await signer.sendUserOperation({
-        target: appData.contractAddress,
-        data: encodeFunctionData({
-          abi: contractAbi,
-          functionName: "updateFarm",
-          args: [farmData],
-        }),
-      });
-
-      const txnHash = await signer.waitForUserOperationTransaction(hash);
-      console.log("txnHash", txnHash);
-
-      return true;
-    } catch (error) {
-      console.log("Error updating farm data in contract:", error);
-      toast.error(
-        "Error updating farm data in contract. Please try again later."
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []);
+      const contract = new ethers.Contract(
+        appData.contractAddress,
+        contractAbi,
+        provider
       );
+      const signer = provider.getSigner();
+      const contractWithSigner = contract.connect(signer);
+      const result = await contractWithSigner.updateFarm(farmData);
+      const receipt = await result.wait();
+      // console.log("receipt", receipt);
+      // console.log("result", result);
+      // console.log("Farm data updated successfully!");
+      if (receipt.status === 1) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      // console.log("Error updating farm data in contract:", error);
+      // toast.error("Error updating farm data in contract");
       return false;
     }
   };
 
-  // aa
   const updateAnimalsInContract = async (animalsData) => {
     try {
-      const signer = await ECDSAProvider.init({
-        projectId: appData.projectId,
-        owner: getRPCProviderOwner(appData.web3auth.provider),
-      });
-
-      const address = await signer.getAddress();
-      console.log("Address: ", address);
-
-      const animalsDataString = JSON.stringify(animalsData);
-
-      const { hash } = await signer.sendUserOperation({
-        target: appData.contractAddress,
-        data: encodeFunctionData({
-          abi: contractAbi,
-          functionName: "updateAnimals",
-          args: [animalsDataString],
-        }),
-      });
-
-      const txnHash = await signer.waitForUserOperationTransaction(hash);
-      console.log("txnHash", txnHash);
-
-      return true;
-    } catch (error) {
-      console.log("Error updating animals data in contract:", error);
-      toast.error(
-        "Error updating animals data in contract. Please try again later."
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []);
+      const contract = new ethers.Contract(
+        appData.contractAddress,
+        contractAbi,
+        provider
       );
+      const signer = provider.getSigner();
+      const contractWithSigner = contract.connect(signer);
+      const result = await contractWithSigner.updateAnimals(
+        JSON.stringify(animalsData)
+      );
+      const receipt = await result.wait();
+      // console.log("receipt", receipt);
+      // console.log("result", result);
+      // console.log("Farm data updated successfully!");
+      if (receipt.status === 1) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      // console.log("Error updating animals data in contract:", error);
+      // toast.error("Error updating animals data in contract");
       return false;
     }
   };
 
-  // aa
+  const updateLivestockGoalsInContract = async (livestockGoalsData) => {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []);
+      const contract = new ethers.Contract(
+        appData.contractAddress,
+        contractAbi,
+        provider
+      );
+      const signer = provider.getSigner();
+      const contractWithSigner = contract.connect(signer);
+      const result = await contractWithSigner.updateLivestockGoals(
+        livestockGoalsData
+      );
+      const receipt = await result.wait();
+      // console.log("receipt", receipt);
+      // console.log("result", result);
+      // console.log("Farm data updated successfully!");
+      if (receipt.status === 1) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      // console.log("Error updating livestock goals data in contract:", error);
+      // toast.error("Error updating livestock goals data in contract");
+      return false;
+    }
+  };
+
   const updateLivestockValueInContract = async (value) => {
     try {
-      // Initialize the signer using ECDSAProvider
-      const signer = await ECDSAProvider.init({
-        projectId: appData.projectId,
-        owner: getRPCProviderOwner(appData.web3auth.provider),
-      });
-
-      // Get the signer's address
-      const address = await signer.getAddress();
-      console.log("Address: ", address);
-
-      // Send the user operation with the encoded function data
-      const { hash } = await signer.sendUserOperation({
-        target: appData.contractAddress,
-        data: encodeFunctionData({
-          abi: contractAbi,
-          functionName: "updateLivestockValue",
-          args: [value],
-        }),
-        // value: value, // Uncomment and set if needed
-      });
-
-      // Wait for the transaction to be mined
-      const txnHash = await signer.waitForUserOperationTransaction(hash);
-      console.log("txnHash", txnHash);
-
-      return true;
-    } catch (error) {
-      console.log("Error updating livestock value in contract:", error);
-      toast.error(
-        "Error updating livestock value in contract. Please try again later."
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []);
+      const contract = new ethers.Contract(
+        appData.contractAddress,
+        contractAbi,
+        provider
       );
+      const signer = provider.getSigner();
+      const contractWithSigner = contract.connect(signer);
+      const result = await contractWithSigner.updateLivestockValue(value);
+      const receipt = await result.wait();
+      // console.log("receipt", receipt);
+      // console.log("result", result);
+      // console.log("Farm data updated successfully!");
+      if (receipt.status === 1) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      // console.log("Error updating livestock goals data in contract:", error);
+      // toast.error("Error updating livestock goals data in contract");
       return false;
     }
   };
 
-  // aa
   const updateBankerDataInContract = async (uid, email) => {
     try {
-      // Initialize the signer using ECDSAProvider
-      const signer = await ECDSAProvider.init({
-        projectId: appData.projectId,
-        owner: getRPCProviderOwner(appData.web3auth.provider),
-      });
-
-      // Get the signer's address
-      const address = await signer.getAddress();
-      console.log("Address: ", address);
-
-      // Send the user operation with the encoded function data
-      const { hash } = await signer.sendUserOperation({
-        target: appData.contractAddress,
-        data: encodeFunctionData({
-          abi: contractAbi,
-          functionName: "updateBanker",
-          args: [email, email],
-        }),
-        // value: value, // Uncomment and set if needed
-      });
-
-      // Wait for the transaction to be mined
-      const txnHash = await signer.waitForUserOperationTransaction(hash);
-      console.log("txnHash", txnHash);
-
-      return true;
-    } catch (error) {
-      console.log("Error updating banker data in contract:", error);
-      toast.error(
-        "Error updating banker data in contract. Please try again later."
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []);
+      const contract = new ethers.Contract(
+        appData.contractAddress,
+        contractAbi,
+        provider
       );
+      const signer = provider.getSigner();
+      const contractWithSigner = contract.connect(signer);
+      const result = await contractWithSigner.updateBanker(uid, email);
+      const receipt = await result.wait();
+      // console.log("receipt", receipt);
+      // console.log("result", result);
+      // console.log("Farm data updated successfully!");
+      if (receipt.status === 1) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      // console.log("Error updating banker data in contract:", error);
+      // toast.error("Error updating banker data in contract");
       return false;
     }
   };
@@ -960,6 +983,7 @@ export const AppProvider = ({ children }) => {
         signInUser,
         deleteFarmForUser,
         addAnimalForUser,
+        updateLivestockGoalsForUser,
         initializeWeb3,
         disconnectWallet,
         sendOtp,
@@ -968,8 +992,8 @@ export const AppProvider = ({ children }) => {
         updateUserDataInContract,
         updateFarmInContract,
         updateAnimalsInContract,
+        updateLivestockGoalsInContract,
         updateLivestockValueForUser,
-        initWeb3Auth,
       }}
     >
       <Toaster />

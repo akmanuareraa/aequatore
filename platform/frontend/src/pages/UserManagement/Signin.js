@@ -10,17 +10,17 @@ function Signin(props) {
     useContext(AppContext);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [otp, setOtp] = useState(false);
 
   const handleFormSubmit = async () => {
-    if (email === "" || password === "") {
+    if (email === "") {
       toast.error("Please fill all the fields");
       return;
     }
     try {
-      const signInResult = await signInUser(email, password);
-      // console.log("signInResult:", signInResult);
+      console.log("Signing In...", email);
+      const signInResult = await signInUser(email);
+      console.log("signInResult:", signInResult);
     } catch (error) {
       // console.log(error);
     }
@@ -49,21 +49,6 @@ function Signin(props) {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            {/* password */}
-            <div className="w-full max-w-xs form-control">
-              <label className="label">
-                <span className="font-bold text-white label-text">
-                  Password
-                </span>
-              </label>
-              <input
-                type="text"
-                placeholder="Enter your password"
-                className="w-[400px] max-w-xs text-md text-white border-white rounded-none bg-gGray input input-bordered px-4 py-6"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
           </div>
 
           {
@@ -87,42 +72,11 @@ function Signin(props) {
             ) : null
           }
 
-          <p className="text-white">
-            {appData.blockchain.address === ""
-              ? "Wallet not connected"
-              : appData.blockchain.address}
-          </p>
-
           {/* submit button */}
-          {appData.blockchain.address === "" ? (
-            <button
-              className="w-full py-2 text-lg text-black capitalize border-0 rounded-full bg-gGreen btn"
-              onClick={() => {
-                initializeWeb3();
-              }}
-            >
-              Connect Wallet
-            </button>
-          ) : (
-            <button
-              className="w-full py-2 text-lg text-black capitalize border-0 rounded-full bg-gGreen btn"
-              onClick={() => {
-                disconnectWallet();
-              }}
-            >
-              Disconnect Wallet
-            </button>
-          )}
-
           <button
             className="w-full py-2 text-lg text-black capitalize border-0 rounded-full bg-gGreen btn"
             onClick={() => {
-              if (appData.blockchain.address === "") {
-                toast.error("Please connect wallet first");
-                return;
-              } else {
-                handleFormSubmit();
-              }
+              handleFormSubmit();
             }}
           >
             Sign In

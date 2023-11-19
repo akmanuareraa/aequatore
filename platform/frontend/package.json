@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@web3auth/modal": "^7.0.5",
+    "@zerodev/sdk": "^4.3.0",
     "alchemy-sdk": "^2.10.0",
     "axios": "^1.4.0",
     "dotenv": "^16.3.1",
