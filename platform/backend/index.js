@@ -32,7 +32,8 @@ const publicClient = createPublicClient({
     "https://polygon-mumbai.infura.io/v3/f36f7f706a58477884ce6fe89165666c"
   ),
 });
-const zerodevInit = async (owner) => {
+
+const zerodevInit = async () => {
   const ecdsaProvider = await ECDSAProvider.init({
     projectId,
     owner,
@@ -60,6 +61,7 @@ const main = async () => {
   // });
   // console.log("Data: ", data);
 };
+
 // ===================================
 // ===================================
 
